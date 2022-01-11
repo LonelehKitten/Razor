@@ -1,8 +1,6 @@
 
 import { gl } from '../gl/GLUtils';
 import IResource from '../tools/IResource';
-import Float32Buffer from '../utils/Float32Buffer';
-import Int32Buffer from '../utils/Int32Buffer';
 import VBO from './VBO';
 
 class VAO implements IResource {
@@ -10,6 +8,7 @@ class VAO implements IResource {
     private _vboList: VBO[];
     
     public constructor(vboList: VBO[]) {
+        this._vboList = [];
         for(const vbo of vboList) {
             if(vbo !== null && vbo !== undefined) {
                 this._vboList.push(vbo);
@@ -29,40 +28,28 @@ class VAO implements IResource {
         gl.bufferData(vbo.getType(), vbo.getBuffer(), gl.STATIC_DRAW);
 
         if(vbo.getType() === gl.ARRAY_BUFFER) {
-
-            const setAttributePointer = (dataType) => {
-                gl.vertexAttribPointer(target, vbo.getOffset(), dataType, false, 0, 0);
-            }
-
-            if(vbo.getBuffer() instanceof Int32Buffer) { 
-                setAttributePointer(gl.INT);
-            }
-            if(vbo.getBuffer() instanceof Float32Buffer) {
-                setAttributePointer(gl.FLOAT);
-            }
-
+            this._setAttributePointer(target, vbo);
         }
 
-        gl.bindBuffer(vbo.getType(), 0);
+        gl.bindBuffer(vbo.getType(), undefined);
     }
 
     public bind() : void {
         for(let i = 0; i < this._vboList.length; i++) {
-            if(this._vboList[i].getType() === gl.ELEMENT_ARRAY_BUFFER) {
-                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this._vboList[i].getId());
-                continue;
+            gl.bindBuffer(this._vboList[i].getType(), this._vboList[i].getId());
+            if(this._vboList[i].getType() !== gl.ELEMENT_ARRAY_BUFFER) {
+                this._setAttributePointer(i, this._vboList[i])
+                gl.enableVertexAttribArray(i);
             }
-            gl.enableVertexAttribArray(i);
         }
     }
 
     public unbind() : void {
         for(let i = this._vboList.length-1; i >= 0; i--) {
-            if(this._vboList[i].getType() === gl.ELEMENT_ARRAY_BUFFER) {
-                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, 0);
-                continue;
+            gl.bindBuffer(this._vboList[i].getType(), this._vboList[i].getId());
+            if(this._vboList[i].getType() !== gl.ELEMENT_ARRAY_BUFFER) {
+                gl.disableVertexAttribArray(i);
             }
-            gl.disableVertexAttribArray(i);
         }
     }
 
@@ -70,6 +57,21 @@ class VAO implements IResource {
         for(let i = this._vboList.length-1; i >= 0; i--) {
             gl.deleteBuffer(this._vboList[i].getId());
         }
+    }
+
+    private _setAttributePointer(target: number, vbo: VBO) : void {
+
+        const setAttributePointer = (dataType) => {
+            gl.vertexAttribPointer(target, vbo.getOffset(), dataType, false, 0, 0);
+        }
+
+        if(vbo.getBuffer() instanceof Int32Array) { 
+            setAttributePointer(gl.INT);
+        }
+        if(vbo.getBuffer() instanceof Float32Array) {
+            setAttributePointer(gl.FLOAT);
+        }
+
     }
 
 }

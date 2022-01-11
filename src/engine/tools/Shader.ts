@@ -30,8 +30,8 @@ class Shader implements IResource{
 
         gl.linkProgram(this._program);
 
-        let error : string = gl.getProgramInfoLog(this._program);
-        if(error !== undefined) {
+        let error : string = gl.getProgramInfoLog(this._program).trim();
+        if(error !== '') {
             throw new Error('Error trying to link shader: ' + this._name + '.\n' + error);
         }
     }
@@ -39,25 +39,28 @@ class Shader implements IResource{
     private load(pathname: string, type: number) : WebGLShader {
         let shader : WebGLShader = gl.createShader(type);
 
-        FileUtils.load(pathname)
-            .then((file) => {
+        FileUtils.load(
+            pathname, 
+            function onSuccess(file) {
+                console.log(file);
                 gl.shaderSource(shader, file);
-            })
-            .catch((err) => {
+            },
+            function onError(err) {
                 throw new Error('Error trying to load shader: ' + pathname + '.\n' + err);
-            });
+            },
+        );
 
         gl.compileShader(shader);
-        let error : string = gl.getShaderInfoLog(shader);
-        if( error !== undefined) {
-            throw new Error('Error trying to compile shader: ' + this._name + '.\n' + error);
+        let error : string = gl.getShaderInfoLog(shader).trim();
+        if( error !== '') {
+            throw new Error('Error trying to compile shader: ' + pathname + '.\n' + error);
         }
 
         return shader;
     }
 
     public bind() : void {
-        
+        gl.useProgram(this._program);
     }
 
     public unbind() : void {
