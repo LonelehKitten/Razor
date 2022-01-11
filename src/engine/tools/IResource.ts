@@ -1,7 +1,8 @@
 
 interface IResource {
     create: () => void;
-    use: () => void;
+    bind: () => void;
+    unbind: () => void;
     destroy: () => void;
 }
 

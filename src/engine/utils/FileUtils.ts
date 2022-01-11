@@ -1,7 +1,7 @@
 
-class FileLoader {
+class FileUtils {
     public static async load(pathname: string) : Promise<string> {
-        let reader;
+        let reader : ReadableStreamDefaultReader<Uint8Array>;
 
         await fetch(pathname)
         .then(res => res.body)
@@ -14,4 +14,4 @@ class FileLoader {
     }
 }
 
-export default FileLoader;
+export default FileUtils;

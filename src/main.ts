@@ -1,5 +1,5 @@
 import Razor from "./engine/core/Razor";
-import FileLoader from "./engine/loaders/FileLoader"
+import FileUtils from "./engine/utils/FileUtils"
 
 //import TestGLSL from './resources/shader/test.glsl';
 
@@ -11,7 +11,7 @@ import FileLoader from "./engine/loaders/FileLoader"
       engine.start();
 
       let div : HTMLDivElement = document.createElement("div") as HTMLDivElement;
-      FileLoader.load('/resources/shader/test.glsl')
+      FileUtils.load('/resources/shader/test.glsl')
         .then((file) => div.innerText = file);
         //div.innerText = TestGLSL;
         document.body.appendChild(div);
