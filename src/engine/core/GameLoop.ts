@@ -24,11 +24,22 @@ class GameLoop {
         let vertices = [
              0,  0, 0,
              0, .5, 0,
-            .5, .5, 0
+            .5, .5, 0,
+            .5,  0, 0
         ];
 
+        let colors = [
+            1.0, 0.0, 0.0, 1.0,
+            0.0, 1.0, 0.0, 1.0,
+            0.0, 0.0, 1.0, 1.0
+        ]
+
+        let indices = [0, 1, 2, 0, 2, 3]
+
         this._mesh = new VAO([
-            new VBO(new Float32Array(vertices), 3, true)
+            new VBO(new Float32Array(vertices), 3, true),
+            new VBO(new Float32Array(colors), 4, true),
+            new VBO(new Uint16Array(indices), 1, false),
         ]);
 
         this._mesh.create();
@@ -50,8 +61,9 @@ class GameLoop {
     private run() : void {
         this._shader.bind();
         this._mesh.bind();
-        gl.drawArrays(gl.TRIANGLES, 0, 3)
-        //this._mesh.unbind();
+        //gl.drawArrays(gl.TRIANGLES, 0, 3)/
+        gl.drawElements(gl.TRIANGLES, this._mesh.getIbo().getLength(), gl.UNSIGNED_SHORT, 0);
+        this._mesh.unbind();
     }
 
 }

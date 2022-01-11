@@ -6,12 +6,16 @@ import VBO from './VBO';
 class VAO implements IResource {
 
     private _vboList: VBO[];
+    private _ibo: VBO;
     
     public constructor(vboList: VBO[]) {
         this._vboList = [];
         for(const vbo of vboList) {
             if(vbo !== null && vbo !== undefined) {
                 this._vboList.push(vbo);
+                if(vbo.getType() === gl.ELEMENT_ARRAY_BUFFER) {
+                    this._ibo = vbo;
+                }
             }
         }
     }
@@ -65,13 +69,32 @@ class VAO implements IResource {
             gl.vertexAttribPointer(target, vbo.getOffset(), dataType, false, 0, 0);
         }
 
+        if(vbo.getBuffer() instanceof Int8Array) { 
+            setAttributePointer(gl.BYTE);
+        }
+        if(vbo.getBuffer() instanceof Int16Array) { 
+            setAttributePointer(gl.SHORT);
+        }
         if(vbo.getBuffer() instanceof Int32Array) { 
             setAttributePointer(gl.INT);
+        }
+        if(vbo.getBuffer() instanceof Uint8Array) { 
+            setAttributePointer(gl.UNSIGNED_BYTE);
+        }
+        if(vbo.getBuffer() instanceof Uint16Array) { 
+            setAttributePointer(gl.UNSIGNED_SHORT);
+        }
+        if(vbo.getBuffer() instanceof Uint32Array) { 
+            setAttributePointer(gl.UNSIGNED_INT);
         }
         if(vbo.getBuffer() instanceof Float32Array) {
             setAttributePointer(gl.FLOAT);
         }
 
+    }
+
+    public getIbo(): VBO {
+        return this._ibo;
     }
 
 }

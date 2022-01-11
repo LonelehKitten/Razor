@@ -2,7 +2,10 @@ import { gl } from "../gl/GLUtils";
 import Float32Buffer from "../utils/Float32Buffer";
 import Int32Buffer from "../utils/Int32Buffer";
 
-type TypedArray = Int32Array | Float32Array;
+type IntTypedArray = BigInt64Array | Int32Array | Int16Array | Int8Array ;
+type UintTypedArray = BigUint64Array | Uint32Array | Uint16Array | Uint8Array ;
+type FloatTypedArray = Float64Array | Float32Array;
+type TypedArray = IntTypedArray | UintTypedArray | FloatTypedArray;
 
 class VBO {
 
@@ -45,6 +48,10 @@ class VBO {
 
     public getType(): number {
         return this._isAttribute ? gl.ARRAY_BUFFER : gl.ELEMENT_ARRAY_BUFFER;
+    }
+
+    public getLength(): number {
+        return this._buffer.length;
     }
     
 }
