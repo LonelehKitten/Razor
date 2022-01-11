@@ -70,6 +70,38 @@ class Shader implements IResource{
     public destroy() : void {
         
     }
+
+    public getUniformLocation(name : string) : WebGLUniformLocation {
+        return gl.getUniformLocation(this._program, name);
+    }
+
+    /**
+     * Sets the value of a 32 bits integer uniform
+     * @param name uniform name on shader
+     * @param value value to set
+     */
+    public setInt(name : string, value : number) : void {
+        gl.uniform1f(this.getUniformLocation(name), value);
+    }
+
+    /**
+     * Sets the value of a 32 bits precision float uniform
+     * @param name uniform name on shader
+     * @param value value to set
+     */
+    public setFloat(name : string, value : number) : void {
+        gl.uniform1f(this.getUniformLocation(name), value);
+    }
+
+    /**
+     * Sets the value of a 32 bits precision float array uniform
+     * @param name uniform name on shader
+     * @param value value to set
+     */
+    public setFloatArray(name : string, arrayValue: number[]) : void {
+        gl.uniform1fv(this.getUniformLocation(name), new Float32Array(arrayValue));
+    }
+    
 }
 
 export default Shader;
