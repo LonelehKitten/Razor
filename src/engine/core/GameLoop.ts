@@ -2,12 +2,14 @@ import { gl } from "../gl/GLUtils";
 import VAO from '../buffer/VAO'
 import VBO from "../buffer/VBO";
 import Shader from "../tools/Shader";
+import Matrix4x4 from "../math/Matrix4x4"
 
 class GameLoop {
 
     private static _instance: GameLoop;
     private _mesh: VAO;
     private _shader: Shader;
+    private _ortho: Matrix4x4;
 
     private constructor() {
 
@@ -19,13 +21,21 @@ class GameLoop {
         );
 
         this._shader.create();
+        this._ortho = Matrix4x4.orthographic(
+            0, 
+            window.innerWidth,
+            0,
+            window.innerHeight,
+            -1,
+            100
+        );
 
         // ========= OBJECT DATA ==========
         let vertices = [
              0,  0, 0,
-             0, .5, 0,
-            .5, .5, 0,
-            .5,  0, 0
+             0, 100, 0,
+            100, 100, 0,
+            100,  0, 0
         ];
 
         let colors = [
@@ -60,6 +70,7 @@ class GameLoop {
 
     private run() : void {
         this._shader.bind();
+        this._shader.setMatrix4x4('u_orthographic', this._ortho);
         this._mesh.bind();
         //gl.drawArrays(gl.TRIANGLES, 0, 3)/
         gl.drawElements(gl.TRIANGLES, this._mesh.getIbo().getLength(), gl.UNSIGNED_SHORT, 0);

@@ -1,6 +1,7 @@
 import IResource from './IResource';
 import { gl } from "../gl/GLUtils";
 import FileUtils from '../utils/FileUtils';
+import Matrix4x4 from '../math/Matrix4x4';
 
 class Shader implements IResource{
 
@@ -76,12 +77,37 @@ class Shader implements IResource{
     }
 
     /**
+     * Check if the given name matches an actual uniform in the shader,
+     * if so sets the value, otherwise throw an error
+     * @param name uniform name
+     * @param setValue callback to set the value in case of success
+     */
+    private _checkIfUniformExists(name : string, 
+        setValue: (location: WebGLUniformLocation) => void) : void {
+        const location = gl.getUniformLocation(this._program, name);
+        if(location === -1) {
+            throw new Error(`Uniform \'${name}\' does not exist in shader: ${this._name}`);
+        }
+        setValue(location);
+    }
+
+    /**
      * Sets the value of a 32 bits integer uniform
      * @param name uniform name on shader
      * @param value value to set
      */
     public setInt(name : string, value : number) : void {
-        gl.uniform1f(this.getUniformLocation(name), value);
+        this._checkIfUniformExists(name, (location) => gl.uniform1i(location, value));
+    }
+
+    /**
+     * Sets the value of a 32 bits integer array uniform
+     * @param name uniform name on shader
+     * @param value value to set
+     */
+     public setIntArray(name : string, arrayValue: number[]) : void {
+        this._checkIfUniformExists(name, 
+            (location) => gl.uniform1iv(location, new Int32Array(arrayValue)));
     }
 
     /**
@@ -90,7 +116,7 @@ class Shader implements IResource{
      * @param value value to set
      */
     public setFloat(name : string, value : number) : void {
-        gl.uniform1f(this.getUniformLocation(name), value);
+        this._checkIfUniformExists(name, (location) => gl.uniform1f(location, value));
     }
 
     /**
@@ -99,7 +125,13 @@ class Shader implements IResource{
      * @param value value to set
      */
     public setFloatArray(name : string, arrayValue: number[]) : void {
-        gl.uniform1fv(this.getUniformLocation(name), new Float32Array(arrayValue));
+        this._checkIfUniformExists(name, 
+            (location) => gl.uniform1fv(location, new Float32Array(arrayValue)));
+    }
+
+    public setMatrix4x4(name: string, matrix: Matrix4x4): void {
+        this._checkIfUniformExists(name, 
+            (location) => gl.uniformMatrix4fv(location, false, matrix.toArray()));
     }
     
 }
