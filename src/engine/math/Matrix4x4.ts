@@ -6,16 +6,16 @@ class Matrix4x4 extends Matrix {
     public constructor (
         matrix: 
         [
-            [number, number, number, number], 
-            [number, number, number, number], 
-            [number, number, number, number], 
-            [number, number, number, number]
+            number, number, number, number, 
+            number, number, number, number, 
+            number, number, number, number, 
+            number, number, number, number
         ] =
         [
-            [1, 0, 0, 0],
-            [0, 1, 0, 0],
-            [0, 0, 1, 0],
-            [0, 0, 0, 1],
+            1, 0, 0, 0,
+            0, 1, 0, 0,
+            0, 0, 1, 0,
+            0, 0, 0, 1,
         ] 
         ) {
         super(matrix);
@@ -49,6 +49,41 @@ class Matrix4x4 extends Matrix {
         matrix.set([3, 1], -(top + bottom) * tb);
         matrix.set([3, 2], -(far + near) * fn);
     
+        return matrix;
+    }
+
+    public static perspective(
+        left: number,
+        right: number,
+        top: number,
+        bottom: number,
+        near: number,
+        far: number
+    ): Matrix4x4 {
+        let matrix: Matrix4x4 = new Matrix4x4();
+    
+        let rl: number = 1 / (right - left);
+        let tb: number = 1 / (top - bottom);
+        let fn: number = 1 / (far - near);
+    
+        matrix.set([0, 0], 2*near * rl);
+        matrix.set([0, 2], (right+left)/rl)
+
+        matrix.set([1, 1], 2*near * tb);
+        matrix.set([1, 2], (top+bottom)/tb)
+
+        matrix.set([2, 2], (far-near) * fn)
+        matrix.set([2, 3], -2*(far + near) * fn);
+
+        matrix.set([3, 2], -1);
+        matrix.set([3, 3], 0);
+    
+        return matrix;
+    }
+
+    public static view(): Matrix4x4 {
+        let matrix: Matrix4x4 = new Matrix4x4();
+
         return matrix;
     }
 

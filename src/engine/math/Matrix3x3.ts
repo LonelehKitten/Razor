@@ -3,26 +3,18 @@ import {Tuple} from './MathTypes'
 
 class Matrix3x3 extends Matrix {
 
-    private static _identity: 
-    [
-        [number, number, number], 
-        [number, number, number], 
-        [number, number, number]
-    ] =
-    [
-        [1, 0, 0],
-        [0, 1, 0],
-        [0, 0, 1],
-    ]
-
     public constructor(
         matrix: 
         [
-            [number, number, number], 
-            [number, number, number], 
-            [number, number, number]
+            number, number, number, 
+            number, number, number, 
+            number, number, number
         ] 
-        = Matrix3x3._identity
+        = [
+            1, 0, 0,
+            0, 1, 0,
+            0, 0, 1,
+        ]
         ) {
         super(matrix);
     }

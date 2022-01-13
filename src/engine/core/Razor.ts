@@ -26,8 +26,7 @@ class Razor {
 
     this._canvas.width = window.innerWidth;
     this._canvas.height = window.innerHeight;
-    //gl.viewport(0, 0, this._canvas.width, this._canvas.height);
-    gl.viewport(-1, 1, 1, -1);
+    gl.viewport(0, 0, this._canvas.width, this._canvas.height);
   }
 }
 

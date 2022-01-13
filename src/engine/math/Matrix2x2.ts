@@ -3,23 +3,16 @@ import {Tuple} from './MathTypes'
 
 class Matrix2x2 extends Matrix {
 
-    private static _identity: 
-    [
-        [number, number], 
-        [number, number]
-    ] =
-    [
-        [1, 0],
-        [0, 1]
-    ]
-
     public constructor(
         matrix: 
         [
-            [number, number], 
-            [number, number]
+            number, number, 
+            number, number
         ] 
-        = Matrix2x2._identity
+        = [
+            1, 0,
+            0, 1
+        ]
         ) {
         super(matrix);
     }
