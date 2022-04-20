@@ -3,6 +3,12 @@ import { gl } from "../gl/GLUtils";
 import FileUtils from '../utils/FileUtils';
 import Matrix4x4 from '../math/Matrix4x4';
 
+export interface ShaderType {
+    name: string
+    vertexShaderPathname: string
+    fragmentShaderPathname: string
+}
+
 class Shader implements IResource{
 
     private _name: string;
@@ -10,14 +16,10 @@ class Shader implements IResource{
     private _fragmentShaderPathname: string;
     private _program: WebGLProgram;
 
-    public constructor(
-        name: string,
-        vertexShaderpathname: string, 
-        fragmentShaderpathname: string
-        ) {
-        this._name = name;
-        this._vertexShaderPathname = vertexShaderpathname;
-        this._fragmentShaderPathname = fragmentShaderpathname;
+    public constructor(params: ShaderType) {
+        this._name = params.name;
+        this._vertexShaderPathname = params.vertexShaderPathname;
+        this._fragmentShaderPathname = params.fragmentShaderPathname;
     }
 
     public create() : void {
@@ -132,6 +134,10 @@ class Shader implements IResource{
     public setMatrix4x4(name: string, matrix: Matrix4x4): void {
         this._checkIfUniformExists(name, 
             (location) => gl.uniformMatrix4fv(location, false, matrix.toArray()));
+    }
+
+    public getName(): string { 
+        return this._name
     }
     
 }

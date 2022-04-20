@@ -1,4 +1,5 @@
 import GLUtils, { gl } from '../gl/GLUtils';
+import GameCore from './GameCore';
 import GameLoop from './GameLoop';
 
 /**
@@ -8,15 +9,15 @@ class Razor {
   private _gameLoop: GameLoop;
   private _canvas: HTMLCanvasElement;
 
-  public constructor() {
-  }
-
-  public start() : void {
+  public constructor(gameCore: GameCore) {
     this._canvas = GLUtils.init();
     this.resize();
     gl.clearColor(0, 0, 0, 1);
-    this._gameLoop = GameLoop.getInstance();
-    this._gameLoop.loop();
+    this._gameLoop = new GameLoop(gameCore);  
+  }
+
+  public start() : void {
+    this._gameLoop.start();
   }
 
   public resize() : void {

@@ -3,6 +3,11 @@ import { gl } from '../gl/GLUtils';
 import IResource from '../tools/IResource';
 import VBO from './VBO';
 
+export interface VAOType {
+    name: string;
+    objectData: string | VBO[];
+}
+
 class VAO implements IResource {
 
     private _vboList: VBO[];
