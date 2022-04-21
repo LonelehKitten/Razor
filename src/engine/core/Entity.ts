@@ -1,6 +1,9 @@
 import VAO from "../buffer/VAO";
 import Renderer from "../renderer/Renderer";
 import Shader from "../tools/Shader";
+import Transform from "../math/Transform"
+import Vec3 from "../math/Vec3";
+
 
 abstract class Entity {
 
@@ -10,11 +13,14 @@ abstract class Entity {
     private _shader: Shader;
     private _renderer: Renderer;
 
+    private _transform: Transform
+
     public constructor(name: string, vao: VAO, shader: Shader, renderer: Renderer) {
         this._name = name;
         this._vao = vao;
         this._shader = shader;
         this._renderer = renderer;
+        this._transform = new Transform(new Vec3(), new Vec3(), new Vec3(1, 1, 1))
     }
 
     public abstract update(): void;
@@ -46,6 +52,10 @@ abstract class Entity {
 
     public getName(): string {
         return this._name;
+    }
+
+    public getTransform() : Transform {
+        return this._transform
     }
 
 }

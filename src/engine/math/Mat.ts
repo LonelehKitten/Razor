@@ -1,6 +1,6 @@
 import {Tuple} from './MathTypes'
 
-abstract class Matrix {
+abstract class Mat {
 
     private _matrix: number[];
 
@@ -32,4 +32,4 @@ abstract class Matrix {
 
 }
 
-export default Matrix;
+export default Mat;

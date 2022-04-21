@@ -36,7 +36,7 @@ class ResourceLoader {
             }
 
             if(typeof vao.objectData === 'string') {
-                // todo: lesh loader
+                // todo: mesh loader
                 return;
             }
 

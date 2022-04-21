@@ -30,18 +30,23 @@ class Scene {
      * @param entity entity or the name of the entity to be added
      * @param visible default visibility
      */
-    public add(entity: Entity, visible: boolean = true): void {
+    public add(entity: Entity, visible: boolean = true): Scene {
         const key: string = this._validate(entity, this._entities);
         this._entities.set(entity.getName(), entity);
-        this[visible ? '_visible' : '_nonVisible']
-            .set(entity.getName(), entity);
+        if(visible) {
+            this._visible.set(entity.getName(), entity);
+        }
+        else { 
+            this._hidden.set(entity.getName(), entity);
+        }
+        return this
     }
 
     /**
      * Remove an existent entity
      * @param entity entity or the name of the entity to be removed
      */
-    public remove(entity: Entity|string): void {
+    public remove(entity: Entity|string): Scene {
         const key: string = this._validate(entity, this._entities, false);
         this._entities.delete(key);
         if(this._visible.has(key)) {
@@ -50,6 +55,7 @@ class Scene {
         if(this._hidden.has(key)) {
             this._hidden.delete(key);
         }
+        return this
     }
 
     /**
@@ -57,7 +63,7 @@ class Scene {
      * @param entity entity or the name of the entity to have the visibility changed
      * @param visible the visibility value
      */
-    public setVisibility(entity: Entity|string, visible: boolean): void|never {
+    public setVisibility(entity: Entity|string, visible: boolean): Scene|never {
         const key: string = this._validate(entity, this._entities, false);
         if(visible) {
             this._visible.set(key, this._hidden.get(key));
@@ -66,6 +72,7 @@ class Scene {
             this._hidden.set(key, this._visible.get(key));
             this._visible.delete(key);
         }
+        return this
     }
 
     /**
@@ -107,23 +114,26 @@ class Scene {
      * Iterates all entities
      * @param fn do something with each entity
      */
-    public forEach(fn: (entity: Entity, key?: string) => void): void {
+    public forEach(fn: (entity: Entity, key?: string) => void): Scene {
         this._forEach(fn, this._entities);
+        return this
     }
 
     /**
      * Iterates visible entities
      * @param fn do something with each entity
      */
-    public forEachVisible(fn: (entity: Entity, key?: string) => void): void {
+    public forEachVisible(fn: (entity: Entity, key?: string) => void): Scene {
         this._forEach(fn, this._visible);
+        return this
     }
     /**
      * Iterates hidden entities
      * @param fn do something with each entity
      */
-    public forEachHidden(fn: (entity: Entity, key?: string) => void): void {
+    public forEachHidden(fn: (entity: Entity, key?: string) => void): Scene {
         this._forEach(fn, this._hidden);
+        return this
     }
 
     /**
@@ -132,9 +142,7 @@ class Scene {
      * @param map map to be iterated
      */
     private _forEach(fn: (entity: Entity, key?: string) => void, map: Map<string, Entity>): void {
-        for(let key in map) {
-            fn(map.get(key), key);
-        }
+        map.forEach(fn)
     }
 
     /**

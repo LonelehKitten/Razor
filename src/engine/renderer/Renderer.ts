@@ -1,8 +1,5 @@
 import Entity from "../core/Entity";
-import ResourceLoader from "../core/ResourceLoader";
 import Scene from "../core/Scene";
-import { gl } from "../gl/GLUtils";
-import Matrix4x4 from "../math/Matrix4x4";
 import Shader from "../tools/Shader";
 
 abstract class Renderer {
