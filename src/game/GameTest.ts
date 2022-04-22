@@ -5,6 +5,7 @@ import Scene from '../engine/core/Scene';
 import SimpleRenderer from './renderers/SimpleRenderer'
 import SimpleEntity from './entities/SimpleEntity'
 import Vec3 from '../engine/math/Vec3';
+import OBJLoader from '../engine/loader/OBJLoader';
 import CanvasCamera from './CanvasCamera'
 
 
@@ -48,26 +49,32 @@ class GameTest extends GameCore {
         ];
 
         let colors = [
-            1.0, 0.0, 0.0, 1.0,
-            0.0, 1.0, 0.0, 1.0,
-            0.0, 0.0, 1.0, 1.0,
-            1.0, 0.5, 0.5, 1.0,
-            0.5, 1.0, 0.5, 1.0,
-            0.0, 1.0, 1.0, 1.0,
-            1.0, 1.0, 0.0, 1.0,
-            0.0, 0.0, 0.0, 1.0,
+            1.0, 0.0, 0.0, 1.0, // 0 red
+            0.0, 1.0, 0.0, 1.0, // 1 green
+            0.0, 0.0, 1.0, 1.0, // 2 blue
+            1.0, 0.5, 0.5, 1.0, // 3 pink
+            0.5, 1.0, 0.5, 1.0, // 4 
+            0.0, 1.0, 1.0, 1.0, // 5
+            1.0, 1.0, 0.0, 1.0, // 6
+            0.0, 0.0, 0.0, 1.0, // 7
         ]
 
-        let indices = [0, 1, 3, 0, 3, 2, 0, 1, 5, 0, 5, 4, 1, 7, 5, 1, 3, 7, 0, 2, 6, 0, 6, 4, 4, 5, 7, 4, 7, 6, 2, 3, 7, 2, 7, 6]
+        let indices = [0, 1, 3, 0, 3, 2, 0, 4, 1, 1, 4, 5, 5, 7, 3, 5, 3, 1, 0, 2, 6, 0, 6, 4, 7, 5, 4, 6, 7, 4, 2, 3, 7, 2, 7, 6]
 
-        ResourceLoader.loadVAO([{
-            name: 'obj1',
-            objectData: [
-                new VBO(new Float32Array(vertices), 3, true),
-                new VBO(new Float32Array(colors), 4, true),
-                new VBO(new Uint16Array(indices), 1, false),
-            ]
-        }])
+        ResourceLoader.loadVAO([
+            {
+                name: 'obj1',
+                objectData: [
+                    new VBO(new Float32Array(vertices), 3, true),
+                    new VBO(new Float32Array(colors), 4, true),
+                    new VBO(new Uint16Array(indices), 1, false),
+                ]
+            },/*
+            {
+                name: 'mercedez',
+                objectData: '/resources/objects/mercedez.obj'
+            }*/
+        ])
         .forEachVAO((vao) => {
             vao.create();
         })
@@ -87,6 +94,9 @@ class GameTest extends GameCore {
             .get('entity1')
             .getTransform()
             .setTranslation(new Vec3(0, 0, 3))
+
+
+        
 
     }
 

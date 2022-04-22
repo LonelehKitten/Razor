@@ -27,7 +27,7 @@ class GameLoop {
         this._gameCore.start();
         gl.enable(gl.DEPTH_TEST)
         gl.enable(gl.BLEND)
-        //gl.enable(gl.CULL_FACE)
+        gl.enable(gl.CULL_FACE)
         gl.depthFunc(gl.LESS)
         this.loop(0);
     }

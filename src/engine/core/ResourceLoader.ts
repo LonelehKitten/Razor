@@ -1,6 +1,7 @@
 import Shader, {ShaderType} from '../tools/Shader'
 import VAO, {VAOType} from '../buffer/VAO'
 import VBO from '../buffer/VBO'
+import OBJLoader from '../loader/OBJLoader'
 
 class ResourceLoader {
 
@@ -36,7 +37,8 @@ class ResourceLoader {
             }
 
             if(typeof vao.objectData === 'string') {
-                // todo: mesh loader
+                // todo: mesh loader 
+                this._vaos.set(vao.name, new OBJLoader().load(vao.objectData as string));
                 return;
             }
 

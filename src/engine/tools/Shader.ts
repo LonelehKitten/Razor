@@ -45,7 +45,6 @@ class Shader implements IResource{
         FileUtils.load(
             pathname, 
             function onSuccess(file) {
-                console.log(file);
                 gl.shaderSource(shader, file);
             },
             function onError(err) {

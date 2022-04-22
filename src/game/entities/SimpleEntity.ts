@@ -10,6 +10,8 @@ class SimpleEntity extends Entity {
 
     public update(time: number, delta: number): void {
 
+        /*
+
         this.getTransform().getRotation().y += 15 * delta
         this.getTransform().getRotation().x += 20 * delta
 
@@ -20,7 +22,9 @@ class SimpleEntity extends Entity {
         if(this.getTransform().getRotation().x >= 360) {
             this.getTransform().getRotation().x %= 360
         }
-        
+
+        */
+
     }
 }
 
