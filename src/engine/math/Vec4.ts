@@ -17,6 +17,11 @@ class Vec4 extends Vec3 {
         this._w = w;
     }
 
+    public assign(v: Vec4): void {
+        super.assign(v);
+        this._w = v.w
+    }
+
     public equals(v: Vec4): boolean {
         return super.equals(v) && this._w === v.w;
     }

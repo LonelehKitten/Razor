@@ -5,13 +5,20 @@ import Scene from '../engine/core/Scene';
 import SimpleRenderer from './renderers/SimpleRenderer'
 import SimpleEntity from './entities/SimpleEntity'
 import Vec3 from '../engine/math/Vec3';
+import CanvasCamera from './CanvasCamera'
+
 
 class GameTest extends GameCore {
+
+    private _camera: CanvasCamera
+
     public constructor() {
         super()
     }
 
     public start() {
+
+        this._camera = new CanvasCamera();
 
         // ========= SHADER ==========
 
@@ -65,7 +72,7 @@ class GameTest extends GameCore {
             vao.create();
         })
 
-        const simpleRenderer = new SimpleRenderer();
+        const simpleRenderer = new SimpleRenderer(this._camera);
         this.getRenderStrategy().add(simpleRenderer)
 
         this.getSceneManager()
@@ -83,8 +90,10 @@ class GameTest extends GameCore {
 
     }
 
-    public update() {
-        super.update();
+    public update(time: number, delta: number) {
+        super.update(time, delta);
+
+        this._camera.update(delta)
     }
 
     public render() {

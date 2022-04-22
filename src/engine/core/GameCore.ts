@@ -13,8 +13,8 @@ abstract class GameCore {
 
     public abstract start(): void;
 
-    public update(): void {
-        this._sceneManager.update();
+    public update(time: number, delta: number): void {
+        this._sceneManager.update(time, delta);
     }
 
     public render(): void {

@@ -25,6 +25,11 @@ class Vec2 {
         this._y = y;
     }
 
+    public assign(v: Vec2): void {
+        this._x = v.x 
+        this._y = v.y;
+    }
+
     public equals(v: Vec2): boolean {
         return this._x === v.x && this._y === v.y;
     }

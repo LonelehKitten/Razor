@@ -19,9 +19,9 @@ class Scene {
         this._hidden = new Map<string, Entity>();
     }
 
-    public update(): void {
+    public update(time: number, delta: number): void {
         this.forEachVisible((entity) => {
-            entity.update();
+            entity.update(time, delta);
         })
     }
 

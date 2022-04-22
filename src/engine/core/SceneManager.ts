@@ -22,8 +22,8 @@ class SceneManager {
         this._renderStrategy.render();
     }
 
-    public update(): void {
-        this._active.update();
+    public update(time: number, delta: number): void {
+        this._active.update(time, delta);
     }
 
     /**

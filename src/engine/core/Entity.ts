@@ -23,7 +23,7 @@ abstract class Entity {
         this._transform = new Transform(new Vec3(), new Vec3(), new Vec3(1, 1, 1))
     }
 
-    public abstract update(): void;
+    public abstract update(time: number, delta: number): void;
 
 
     public setVAO(vao: VAO) {
