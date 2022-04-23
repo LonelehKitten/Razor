@@ -1,5 +1,5 @@
 attribute vec3 a_position;
-attribute vec4 a_color;
+//attribute vec4 a_color;
 
 varying vec4 color_data;
 

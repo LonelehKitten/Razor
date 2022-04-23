@@ -69,11 +69,11 @@ class GameTest extends GameCore {
                     new VBO(new Float32Array(colors), 4, true),
                     new VBO(new Uint16Array(indices), 1, false),
                 ]
-            },/*
+            },
             {
-                name: 'mercedez',
-                objectData: '/resources/objects/mercedez.obj'
-            }*/
+                name: 'spider',
+                objectData: '/resources/objects/spider/spider.obj'
+            }
         ])
         .forEachVAO((vao) => {
             vao.create();
@@ -87,7 +87,7 @@ class GameTest extends GameCore {
             .get('scene1')
             .add(new SimpleEntity(
                 'entity1', 
-                ResourceLoader.getVAO('obj1'), 
+                ResourceLoader.getVAO('spider'), 
                 ResourceLoader.getShader('shader1'),
                 simpleRenderer
             ))

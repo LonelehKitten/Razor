@@ -16,13 +16,16 @@ class OBJLoader {
 
                 const data = new OBJFile(file).parse()
 
+                console.log(data);
+                
+
                 const vertices = []
                 const indices = []
 
                 data.models[0].faces.forEach((face) => {
-                    indices.push(face.vertices[0].vertexIndex)
-                    indices.push(face.vertices[1].vertexIndex)
-                    indices.push(face.vertices[2].vertexIndex)
+                    indices.push(face.vertices[0].vertexIndex-1)
+                    indices.push(face.vertices[1].vertexIndex-1)
+                    indices.push(face.vertices[2].vertexIndex-1)
                 })
 
                 data.models[0].vertices.forEach(vertex => {
