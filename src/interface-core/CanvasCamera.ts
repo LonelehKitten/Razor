@@ -52,7 +52,7 @@ class CanvasCamera extends Camera {
             this.getTransform().getTranslation().y += this._speed * delta;
         }
 
-        if(InputManager.isKeyPressed(Keys.KEY_SHIFT_L)){ // DOWN
+        if(InputManager.isKeyPressed(Keys.KEY_ALT_L)){ // DOWN
             this.getTransform().getTranslation().y += -this._speed * delta;
         }
 

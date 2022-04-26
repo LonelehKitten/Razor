@@ -55,7 +55,7 @@ class Vec3 extends Vec2 {
     }
 
     public module(): number {
-        return Math.sqrt(Math.pow(this._x, 2) + Math.pow(this._y, 2) + Math.pow(this._z, 2));
+        return Math.sqrt(this._x ** 2 + this._y ** 2 + this._z ** 2);
     }
     
 }

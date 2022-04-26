@@ -55,11 +55,11 @@ class ResourceLoader {
         return this._vaos.get(name);
     }
 
-    public static forEachVAO(callback: (VAO: VAO) => void): ResourceLoader {
+    public static forEachVAO(callback: (vao: VAO) => void): ResourceLoader {
         return ResourceLoader.getInstance().forEachVAO(callback);
     }
 
-    public forEachVAO(callback: (VAO: VAO) => void): ResourceLoader {
+    public forEachVAO(callback: (vao: VAO) => void): ResourceLoader {
         this._vaos.forEach(callback);
         return this;
     }

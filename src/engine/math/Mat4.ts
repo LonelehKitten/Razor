@@ -36,17 +36,17 @@ class Mat4 extends Mat {
 
     public static orthographic(
         left: number,
-        right: number,
+        right: number, 
         top: number,
         bottom: number,
         near: number,
         far: number
     ): Mat4 {
-        let matrix: Mat4 = new Mat4();
+        const matrix: Mat4 = new Mat4();
     
-        let rl: number = 1 / (right - left);
-        let tb: number = 1 / (top - bottom);
-        let fn: number = 1 / (far - near);
+        const rl: number = 1 / (right - left);
+        const tb: number = 1 / (top - bottom);
+        const fn: number = 1 / (far - near);
     
         matrix.set([0, 0], 2 * rl);
         matrix.set([1, 1], 2 * tb);
@@ -90,16 +90,16 @@ class Mat4 extends Mat {
         near: number,
         far: number
     ): Mat4 {
-        let matrix: Mat4 = new Mat4();
+        const matrix: Mat4 = new Mat4();
 
         const tan = Math.tan(toRadian(fov/2))
         const range = far - near
 
-        const y_scale = 1 / tan
-        const x_scale = y_scale / aspectRatio
+        const yScale = 1 / tan
+        const xScale = yScale / aspectRatio
 
-        matrix.set([0, 0], x_scale);
-        matrix.set([1, 1], y_scale)
+        matrix.set([0, 0], xScale);
+        matrix.set([1, 1], yScale)
 
         matrix.set([2, 2], - ( (far + near) / range ));
         matrix.set([2, 3], -1)
@@ -166,7 +166,7 @@ class Mat4 extends Mat {
     }
 
     public static scale(scale: Vec3): Mat4 {
-        let matrix: Mat4 = new Mat4();
+        const matrix: Mat4 = new Mat4();
 
         matrix.set([0, 0], scale.x);
         matrix.set([1, 1], scale.y);
@@ -188,7 +188,7 @@ class Mat4 extends Mat {
     }
 
     public static rotate(angle: number, axis: Vec3): Mat4 {
-        let matrix: Mat4 = new Mat4();
+        const matrix: Mat4 = new Mat4();
 
         const cos = Math.cos(toRadian(angle));
         const sin = Math.sin(toRadian(angle));
@@ -210,7 +210,7 @@ class Mat4 extends Mat {
     }
 
     public static translate(translate: Vec3): Mat4 {
-        let matrix: Mat4 = new Mat4();
+        const matrix: Mat4 = new Mat4();
 
         matrix.set([3, 0], translate.x);
         matrix.set([3, 1], translate.y);
@@ -229,7 +229,7 @@ class Mat4 extends Mat {
     }
 
     public transpose(): Mat4 {
-        let matrix: Mat4 = new Mat4();
+        const matrix: Mat4 = new Mat4();
 
         transpose(
             4, 
@@ -241,7 +241,7 @@ class Mat4 extends Mat {
     }
 
     public mult(m: Mat4): Mat4 {
-        let matrix: Mat4 = new Mat4();
+        const matrix: Mat4 = new Mat4();
 
         mult(
             4, 

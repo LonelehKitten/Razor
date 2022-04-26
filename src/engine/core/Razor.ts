@@ -7,30 +7,39 @@ import InputManager from './InputManager';
  * Canvas management class
  */
 class Razor {
-    private _gameLoop: GameLoop;
-    private _canvas: HTMLCanvasElement;
 
-    public constructor(gameCore: GameCore) {
-        this._canvas = GLUtils.init();
-        this.resize();
+    public static CANVAS: HTMLCanvasElement;
+
+    private _gameLoop: GameLoop;
+    private _started: boolean
+
+    public constructor(gameCore: GameCore, canvas?: HTMLCanvasElement) {
+        Razor.CANVAS = GLUtils.init(canvas);
+        Object.defineProperty(this, "CANVAS", {
+            writable: false
+        })
         gl.clearColor(0, 0, 0, 1);
         this._gameLoop = new GameLoop(gameCore);  
+        this._started = false
     }
 
     public start() : void {
-        //this.lockMouse()
+        // this.lockMouse()
+        this.resize();
         InputManager.init()
         this._gameLoop.start();
+        this._started = true
     }
 
     public resize() : void {
-        if(this._canvas === undefined) {
+        if(Razor.CANVAS === undefined) {
             throw new Error('Canvas was not initialized!');
         }
 
-        this._canvas.width = window.innerWidth;
-        this._canvas.height = window.innerHeight;
-        gl.viewport(0, 0, this._canvas.width, this._canvas.height);
+        Razor.CANVAS.width = Razor.CANVAS.offsetWidth
+        Razor.CANVAS.height = Razor.CANVAS.offsetHeight
+        gl.viewport(0, 0,Razor.CANVAS.width, Razor.CANVAS.height);
+        
     }
 
     private lockMouse() {
@@ -39,9 +48,13 @@ class Razor {
                 document.exitPointerLock()
             } 
         })
-        this._canvas.addEventListener('click', (e: MouseEvent) => {
-            this._canvas.requestPointerLock()
+        Razor.CANVAS.addEventListener('click', (e: MouseEvent) => {
+            Razor.CANVAS.requestPointerLock()
         })
+    }
+
+    public isStarted(): boolean {
+        return this._started
     }
 }
 

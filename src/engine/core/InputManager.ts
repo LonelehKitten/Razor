@@ -84,7 +84,7 @@ class InputManager {
 
     private static _keys: Map<string, boolean>
 
-    private static _shouldDebug: boolean = false
+    private static _shouldDebug: boolean
 
     public static init() {
         InputManager._keys = new Map<string, boolean>()
@@ -98,6 +98,8 @@ class InputManager {
         window.addEventListener('mousedown', InputManager.onMouseDown)
         window.addEventListener('mouseup', InputManager.onMouseUp)
         window.addEventListener('mousemove', InputManager.onMouseMove)
+
+        this._shouldDebug = false
     }
 
     // KEYBOARD EVENTS

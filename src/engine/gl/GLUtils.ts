@@ -1,11 +1,14 @@
 
+/* eslint-disable */
 export var gl : WebGLRenderingContext = null;
 
 class GLUtils {
 
-    public static init(): HTMLCanvasElement {
-        let canvas = document.createElement('canvas') as HTMLCanvasElement;
-        document.body.appendChild(canvas);
+    public static init(canvas?: HTMLCanvasElement): HTMLCanvasElement {
+        if(!canvas) {
+            canvas = document.createElement('canvas') as HTMLCanvasElement;
+            document.body.appendChild(canvas);
+        }
         gl = canvas.getContext('webgl');
         if(gl === undefined) {
             throw new Error('Unable to initialize WebGL!');

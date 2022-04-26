@@ -84,9 +84,9 @@ class SceneManager {
      * @param fn do something with each scene
      */
     public forEach(fn: (scene: Scene, key?: string) => void): SceneManager {
-        for(let key in this._scenes) {
-            fn(this._scenes.get(key), key);
-        }
+        this._scenes.forEach((scene, key) => {
+            fn(scene, key);
+        })
         return this
     }
 
@@ -110,10 +110,10 @@ class SceneManager {
     private _validate(scene: Scene|string, exists: boolean = true): string|never {
         const name = this._getName(scene);
         if(exists && this._scenes.has(name)) {
-            throw new Error('Scene ' + name + 'already exists!');
+            throw new Error(`Scene ${name} already exists!`);
         }
         if(!exists && !this._scenes.has(name)) {
-            throw new Error('Scene ' + name + 'does not exists!');
+            throw new Error(`Scene ${name} does not exists!`);
         }
         return name;
     }

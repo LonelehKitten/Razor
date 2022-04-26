@@ -16,11 +16,9 @@ class OBJLoader {
 
                 const data = new OBJFile(file).parse()
 
-                console.log(data);
-                
-
-                const vertices = []
                 const indices = []
+                const vertices = []
+                const normals = []
 
                 data.models[0].faces.forEach((face) => {
                     indices.push(face.vertices[0].vertexIndex-1)
@@ -34,14 +32,21 @@ class OBJLoader {
                     vertices.push(vertex.z)
                 })
 
+                data.models[0].vertexNormals.forEach(normal => {
+                    normals.push(normal.x)
+                    normals.push(normal.y)
+                    normals.push(normal.z)
+                })
+
                 vao = new VAO([
                     new VBO(new Float32Array(vertices), 3, true),
+                    new VBO(new Float32Array(normals), 3, true),
                     new VBO(new Uint16Array(indices), 1, false),
                 ])
                 
             },
             function onError(err) {
-                throw new Error('Error trying to load object data: ' + pathname + '.\n' + err);
+                throw new Error(`Error trying to load object data: ${pathname}.\n ${err}`);
             },
         );
 

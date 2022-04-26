@@ -1,9 +1,10 @@
-import Renderer from "../../engine/renderer/Renderer";
-import ResourceLoader from "../../engine/core/ResourceLoader";
-import { gl } from "../../engine/gl/GLUtils";
-import Mat4 from "../../engine/math/Mat4";
-import Entity from "../../engine/core/Entity";
-import Vec3 from "../../engine/math/Vec3";
+import Renderer from "@engine/renderer/Renderer";
+import ResourceLoader from "@engine/core/ResourceLoader";
+import { gl } from "@engine/gl/GLUtils";
+import Mat4 from "@engine/math/Mat4";
+import Entity from "@engine/core/Entity";
+import Vec3 from "@engine/math/Vec3";
+import Razor from "@engine/core/Razor";
 import CanvasCamera from '../CanvasCamera'
 
 class SimpleRenderer extends Renderer {
@@ -14,7 +15,9 @@ class SimpleRenderer extends Renderer {
     constructor(camera: CanvasCamera) {
         super('renderer1')
         this._camera = camera
-        this._projection = Mat4.perspective(70, window.innerWidth / window.innerHeight, 1, 1000)
+        const vd = gl.getParameter(gl.VIEWPORT)
+        this._projection = Mat4.perspective(70, vd[2] / vd[3], 1, 1000)
+        //this._projection = Mat4.perspective(70, window.innerWidth / window.innerHeight, 1, 1000)
         /*
         this._ortho = Mat4.orthographic(
             0, 
