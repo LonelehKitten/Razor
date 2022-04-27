@@ -11,6 +11,7 @@ class Razor {
     public static CANVAS: HTMLCanvasElement;
 
     private _gameLoop: GameLoop;
+    private _gameCore: GameCore;
     private _started: boolean
 
     public constructor(gameCore: GameCore, canvas?: HTMLCanvasElement) {
@@ -21,6 +22,7 @@ class Razor {
         gl.clearColor(0, 0, 0, 1);
         this._gameLoop = new GameLoop(gameCore);  
         this._started = false
+        this._gameCore = gameCore;
     }
 
     public start() : void {
@@ -55,6 +57,10 @@ class Razor {
 
     public isStarted(): boolean {
         return this._started
+    }
+
+    public getGameCore(): GameCore {
+        return this._gameCore
     }
 }
 

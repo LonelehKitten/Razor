@@ -1,9 +1,9 @@
-import GameCore from '@engine/core/GameCore';
 import Razor from '@engine/core/Razor';
+import RazorInterfaceCore from '@interface-core/RazorInterfaceCore';
 import {createSlice, PayloadAction} from '@reduxjs/toolkit'
 
 interface IRazorPayload {
-  gameCore: GameCore;
+  gameCore: RazorInterfaceCore;
   canvas: HTMLCanvasElement;
 }
 

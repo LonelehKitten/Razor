@@ -1,0 +1,41 @@
+
+
+.resource-manager {
+  
+  padding: 1rem;
+  overflow-y: scroll;
+
+  & > ul {
+
+    display: flex;
+    flex-wrap: wrap;
+
+    & > li {
+      display: grid;
+      width: 8rem;
+      height: 8rem;
+      cursor: pointer;
+      border-radius: 4px;
+      box-sizing: border-box;
+      border: 2px solid transparent;
+          
+      & > img {
+        width: 4rem;
+        justify-self: center;
+        align-self: center;
+        margin-bottom: .5rem;
+      }
+      
+      & > span {
+        text-align: center;
+        color: white;
+      }
+      
+      &:hover {
+        background-color: #f55a;
+        border-color:red;
+      }
+    }
+  }
+  
+}
