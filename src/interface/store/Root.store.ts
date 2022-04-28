@@ -8,6 +8,7 @@ import {
 
 import RazorReducer from '@store/Razor.store'
 
+
 const RootStore = configureStore({
   reducer: {
     razor: RazorReducer,

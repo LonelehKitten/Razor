@@ -1,30 +1,14 @@
-import React, { useEffect, useRef } from 'react';
-import { useDispatch } from '@store/Root.store';
-import { RazorActions } from '@store/Razor.store';
-import RazorInterfaceCore from '@interface-core/RazorInterfaceCore';
+import React, { forwardRef, useEffect, useRef } from 'react';
 
 interface ViewportProps {
   
 }
 
-const Viewport: React.FC<ViewportProps> = () => {
-
-  const dispatch = useDispatch();
-
-  const ref = useRef<HTMLCanvasElement>();
-
-  useEffect(() => {
-    dispatch(RazorActions.init({
-      gameCore: new RazorInterfaceCore(),
-      canvas: ref.current
-    }))
-    dispatch(RazorActions.start())
-  }, []);
-
+const Viewport: React.ForwardRefRenderFunction<HTMLCanvasElement, ViewportProps> = (props, ref) => {
   return (
-    <canvas ref={ref} className='container-content'>
+    <canvas ref={ref as React.MutableRefObject<HTMLCanvasElement>} className='container-content'>
     </canvas>
   );
 };
 
-export default Viewport;
+export default forwardRef(Viewport);

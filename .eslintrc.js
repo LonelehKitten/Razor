@@ -67,7 +67,8 @@ module.exports = {
       'no-use-before-define': 'off',
       'prefer-arrow-callback': 'off',
       'no-useless-constructor': 'off',
-      'no-debugger': 'off'
+      'no-debugger': 'off',
+      'no-shadow': 'off',
     },
     settings: {
       'import/parsers': {

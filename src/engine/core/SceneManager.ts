@@ -63,6 +63,10 @@ class SceneManager {
         return this
     }
 
+    public getActive(): Scene {
+        return this._active;
+    }
+
     /**
      * Returns an existent scene
      * @param scene the name of the scene to be returned

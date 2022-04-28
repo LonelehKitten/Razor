@@ -7,6 +7,7 @@ interface IRazorPayload {
   canvas: HTMLCanvasElement;
 }
 
+
 interface RazorStoreState {
   razor: Razor
 }
@@ -16,10 +17,11 @@ const initialState: RazorStoreState = {
 }
 
 const RazorStore = createSlice({
-  name: 'auth',
+  name: 'razor',
   initialState,
   reducers: {
     init: (state: RazorStoreState, action: PayloadAction<IRazorPayload>) => {
+      debugger
       if(!state.razor) {
         state.razor = new Razor(action.payload.gameCore, action.payload.canvas)
       }
@@ -30,6 +32,7 @@ const RazorStore = createSlice({
       }
     }
   }
+  
 })
 
 export type RazorState = typeof initialState

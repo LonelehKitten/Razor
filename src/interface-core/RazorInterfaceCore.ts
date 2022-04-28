@@ -107,9 +107,28 @@ class RazorInterfaceCore extends GameCore {
     super.render();
   }
 
+  public createNewEntity(vaoName: string): void {
 
+    const scene = this.getSceneManager().getActive()
+    let name = 'entity'
+    for (let i = 0; i < Number.MAX_SAFE_INTEGER; i++) {
+      if(!scene.has(name+i)) {
+        name += i
+        break;
+      }
+    }
 
-  
+    scene
+      .add(new SimpleEntity(
+        name,
+        ResourceLoader.getVAO(vaoName), 
+        ResourceLoader.getShader('shader1'),
+        this.getRenderStrategy().get('renderer1')
+      ))
+      .get(name)
+      .getTransform()
+      .setTranslation(new Vec3(0, 0, 3))
+  }
 
 
 }

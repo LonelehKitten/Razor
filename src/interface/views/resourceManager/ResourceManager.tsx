@@ -1,26 +1,43 @@
-import ResourceLoader from '@engine/core/ResourceLoader';
 import useGameCore from '@hooks/useGameCore';
-import React, { useState } from 'react';
+import { RazorContext, ERazorResources } from '@root/src/RazorEngineInterface';
+
+import React, { useContext } from 'react';
 
 interface ResourceManagerProps {
   
 }
 
+/* 
+
+  TODO:
+    - adicionar uma lista de observer e nomes para cada recurso no RazorStore
+    - adicionar uma hook para cada recurso q deverá criar o observer
+    - no observer, deve-se atualizar a lista de nomes
+    - na hook, deve-se retornar a lista de nomes
+
+*/
+
 const ResourceManager: React.FC<ResourceManagerProps> = () => {
 
-  const [models, setModels] = useState<string[]>([]);
+  const core = useGameCore()
+  const razorContext = useContext(RazorContext);
 
-  const gameCore = useGameCore()
+  const createNewEntity = (vaoName: string) => {
+    core.createNewEntity(vaoName)
+  }
 
+  debugger
   return (
     <div className='container-content resource-manager'>
       <ul>
-        {/*ResourceLoader.forEachVAO*/}
-        <li>
-          <img src="/interface-assets/icons/obj-file-icon.svg" alt="model name" />
-          <span>model name</span>
-        </li>
-        
+        {razorContext.observers.resources[ERazorResources.VAO].keys.map(vao => {
+          return (
+            <li key={vao} onDoubleClick={() => createNewEntity(vao)}>
+              <img src="/interface-assets/icons/obj-file-icon.svg" alt={vao} />
+              <span>{vao}</span>
+            </li>
+          )
+        })}
       </ul>
     </div>
   );
