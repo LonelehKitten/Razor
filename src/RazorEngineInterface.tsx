@@ -14,6 +14,8 @@ import produce from "immer";
 export const RazorObserverActions = {
   createObserver: 'RIActions/CREATE_OBSERVER',
   updateObserver: 'RIActions/UPDATE_OBSERVER',
+
+  addEntity: 'RIActions/ADD_ENTITY',
 }
 
 export enum ERazorResources {
@@ -27,7 +29,8 @@ interface IResourcesObserver {
 }
 
 interface RazorObserverState {
-  resources: IResourcesObserver[]
+  resources: IResourcesObserver[],
+  scenes: {name: string, entities: string[]}[]
 }
 
 const initialState: RazorObserverState = {
@@ -36,7 +39,11 @@ const initialState: RazorObserverState = {
       keys: [],
       observing: false,
     }
-  ]
+  ],
+  scenes: [{
+    name: 'unique scene',
+    entities: []
+  }]
 } 
 
 function razorObserverReducer(draft: RazorObserverState, action: {type: string, payload: unknown}) {
@@ -46,6 +53,9 @@ function razorObserverReducer(draft: RazorObserverState, action: {type: string, 
       break;
     case RazorObserverActions.updateObserver:
       draft.resources[action.payload[0]].keys = [...action.payload[1]]
+      break;
+    case RazorObserverActions.addEntity:
+      draft.scenes[0].entities = [...action.payload as string[]]
       break;
     default:
   }
@@ -69,7 +79,12 @@ function initializeEngine(
   observerDispatch: React.Dispatch<{ type: string, payload: unknown}>
 ) {
   dispatch(RazorActions.init({
-    gameCore: new RazorInterfaceCore(),
+    gameCore: new RazorInterfaceCore((keys: string[]) => {
+      observerDispatch({
+        type: RazorObserverActions.addEntity,
+        payload: keys
+      })
+    }),
     canvas: ref.current
   }))
   ResourceLoader.setVAOObserver((keys) => {

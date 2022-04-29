@@ -12,8 +12,11 @@ class RazorInterfaceCore extends GameCore {
 
   private _camera: CanvasCamera
 
-  public constructor() {
+  private _sceneObserver: (keys: string[]) => void;
+
+  public constructor(sceneObserver: (keys: string[]) => void) {
     super()
+    this._sceneObserver = sceneObserver
   }
   
   public start(): void {
@@ -128,9 +131,23 @@ class RazorInterfaceCore extends GameCore {
       .get(name)
       .getTransform()
       .setTranslation(new Vec3(0, 0, 3))
+
+    if(this._sceneObserver) {
+      this._sceneObserver(scene.getKeys())
+    }
   }
 
+  public removeEntity(name: string): void {
+    const scene = this.getSceneManager().getActive()
+    if(scene.has(name)) {
+      scene.remove(name);
+    }
+    if(this._sceneObserver) {
+      this._sceneObserver(scene.getKeys())
+    }
+  }
 
 }
+
 
 export default RazorInterfaceCore
