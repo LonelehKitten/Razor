@@ -2,6 +2,9 @@
 
 
 .scene-manager {
+  height: 60% !important;
+  margin-bottom: 10px;
+  overflow-y: scroll;
   & > ul {
     display: inline;
     color: white;

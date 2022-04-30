@@ -1,3 +1,4 @@
+import Razor from "./Razor"
 
 export const Keys = {
     KEY_0: 'Digit0',
@@ -109,15 +110,19 @@ class InputManager {
     }
 
     private static onKeyDown(event: KeyboardEvent): void {
-        event.stopPropagation()
-        event.preventDefault()
-        InputManager._keys.set(event.code, true)
+        if(Razor.FOCUSED){
+            event.stopPropagation()
+            event.preventDefault()
+            InputManager._keys.set(event.code, true)
+        }
     }
 
     private static onKeyUp(event: KeyboardEvent): void {
-        event.stopPropagation()
-        event.preventDefault()
-        InputManager._keys.set(event.code, false)
+        if(Razor.FOCUSED){
+            event.stopPropagation()
+            event.preventDefault()
+            InputManager._keys.set(event.code, false)
+        }
     }
 
     // MOUSE EVENTS
@@ -143,32 +148,35 @@ class InputManager {
     }
 
     private static onMouseDown(event: MouseEvent): void {
-        event.stopPropagation()
-        event.preventDefault()
-        InputManager._mouseButtons[event.button] = true
+        if(Razor.FOCUSED){
+            event.stopPropagation()
+            event.preventDefault()
+            InputManager._mouseButtons[event.button] = true
+        }
     }
 
     private static onMouseUp(event: MouseEvent): void {
-        event.stopPropagation()
-        event.preventDefault()
-        InputManager._mouseButtons[event.button] = false
+        if(Razor.FOCUSED){
+            event.stopPropagation()
+            event.preventDefault()
+            InputManager._mouseButtons[event.button] = false
+        }
     }
 
     private static onMouseMove(event: MouseEvent): void {
-        event.stopPropagation()
-        event.preventDefault()
-        InputManager._mousePosition[0] = event.offsetX
-        InputManager._mousePosition[1] = event.offsetY
-
-        if(InputManager._shouldDebug) {
-            console.log(`offset:  ${event.offsetX}X ${event.offsetY}Y`);
-            console.log(`client:  ${event.clientX}X ${event.clientY}Y`);
-            console.log(`screen:  ${event.screenX}X ${event.screenY}Y`);
+        if(Razor.FOCUSED){
+            event.stopPropagation()
+            event.preventDefault()
+            InputManager._mousePosition[0] = event.offsetX
+            InputManager._mousePosition[1] = event.offsetY
+    
+            if(InputManager._shouldDebug) {
+                console.log(`offset:  ${event.offsetX}X ${event.offsetY}Y`);
+                console.log(`client:  ${event.clientX}X ${event.clientY}Y`);
+                console.log(`screen:  ${event.screenX}X ${event.screenY}Y`);
+            }
         }
-        
     }
-
-
 
     public static setDebug(value: boolean) {
         InputManager._shouldDebug = value

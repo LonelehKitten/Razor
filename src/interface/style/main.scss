@@ -4,5 +4,9 @@
 
 @import '@views/resourceManager/resource-manager';
 @import '@views/sceneManager/scene-manager';
+@import '@views/entityProperties/entity-properties';
+
+@import '@components/property/property';
 
 @import '@ui/buttons/ui-button';
+@import '@ui/inputslider/input-slider';

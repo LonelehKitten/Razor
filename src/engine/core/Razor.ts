@@ -9,6 +9,7 @@ import InputManager from './InputManager';
 class Razor {
 
     public static CANVAS: HTMLCanvasElement;
+    public static FOCUSED: boolean
 
     private _gameLoop: GameLoop;
     private _gameCore: GameCore;
@@ -26,7 +27,7 @@ class Razor {
     }
 
     public start() : void {
-        // this.lockMouse()
+        this.configs()
         this.resize();
         InputManager.init()
         this._gameLoop.start();
@@ -44,14 +45,14 @@ class Razor {
         
     }
 
-    private lockMouse() {
-        window.addEventListener("keyup", (e: KeyboardEvent) => {
-            if(e.code === 'Escape') {
-                document.exitPointerLock()
-            } 
-        })
-        Razor.CANVAS.addEventListener('click', (e: MouseEvent) => {
-            Razor.CANVAS.requestPointerLock()
+    private configs() {
+        window.addEventListener('click', (e) => {
+            Razor.FOCUSED = (
+                e.clientX > Razor.CANVAS.offsetLeft &&
+                e.clientX < Razor.CANVAS.offsetLeft+Razor.CANVAS.offsetWidth &&
+                e.clientY > Razor.CANVAS.offsetTop &&
+                e.clientY < Razor.CANVAS.offsetTop+Razor.CANVAS.offsetHeight
+            )
         })
     }
 

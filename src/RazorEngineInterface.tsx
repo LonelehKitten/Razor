@@ -9,6 +9,7 @@ import { RazorActions } from "@store/Razor.store";
 import RazorInterfaceCore from "@interface-core/RazorInterfaceCore";
 import ResourceLoader from "@engine/core/ResourceLoader";
 import produce from "immer";
+import EntityProperties from "@views/entityProperties/EntityProperties";
 
 
 export const RazorObserverActions = {
@@ -122,15 +123,10 @@ function RazorEngineInterface() {
         </div>
         <div className="container side-container">
           <SceneManager  />
+          <EntityProperties  />
         </div>
         <div className="container bottom-container">
           <ResourceManager  />
-        </div>
-        <div className="container side-menu">
-          <button type="button" onClick={() => {}}> start </button>
-        </div>
-        <div className="container footer">
-          0
         </div>
       </div>
     </RazorContext.Provider>
