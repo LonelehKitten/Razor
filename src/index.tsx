@@ -6,6 +6,7 @@ import RootStore from '@store/Root.store'
 
 import RazorEngineInterface from './RazorEngineInterface';
 
+import 'simplebar/dist/simplebar.min.css';
 import '@style/main.scss'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

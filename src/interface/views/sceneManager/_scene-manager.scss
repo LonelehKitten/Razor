@@ -4,8 +4,15 @@
 .scene-manager {
   height: 60% !important;
   margin-bottom: 10px;
-  overflow-y: scroll;
-  & > ul {
+  overflow: hidden;
+  & > 
+  [data-simplebar] > 
+  .simplebar-wrapper >
+  .simplebar-mask >
+  .simplebar-offset >
+  .simplebar-content-wrapper >
+  .simplebar-content >
+  ul {
     display: inline;
     color: white;
     & > li {

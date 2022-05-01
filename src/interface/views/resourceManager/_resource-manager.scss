@@ -3,9 +3,16 @@
 .resource-manager {
   
   padding: 1rem;
-  overflow-y: scroll;
+  overflow: hidden;
 
-  & > ul {
+  & > 
+  [data-simplebar] > 
+  .simplebar-wrapper >
+  .simplebar-mask >
+  .simplebar-offset >
+  .simplebar-content-wrapper >
+  .simplebar-content >
+  ul {
 
     display: flex;
     flex-wrap: wrap;

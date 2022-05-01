@@ -2,6 +2,7 @@ import useGameCore from '@hooks/useGameCore';
 import { RazorContext, ERazorResources } from '@root/src/RazorEngineInterface';
 
 import React, { useContext } from 'react';
+import SimpleBar from 'simplebar-react';
 
 interface ResourceManagerProps {
   
@@ -22,23 +23,24 @@ const ResourceManager: React.FC<ResourceManagerProps> = () => {
   const core = useGameCore()
   const razorContext = useContext(RazorContext);
 
-  const createNewEntity = (vaoName: string) => {
+  function createNewEntity(vaoName: string) {
     core.createNewEntity(vaoName)
   }
 
-  debugger
   return (
     <div className='container-content resource-manager'>
-      <ul>
-        {razorContext.observers.resources[ERazorResources.VAO].keys.map(vao => {
-          return (
-            <li key={vao} onDoubleClick={() => createNewEntity(vao)}>
-              <img src="/interface-assets/icons/obj-file-icon.svg" alt={vao} />
-              <span>{vao}</span>
-            </li>
-          )
-        })}
-      </ul>
+      <SimpleBar style={{ maxHeight: '100%' }}>
+        <ul>
+          {razorContext.observers.resources[ERazorResources.VAO].keys.map(vao => {
+            return (
+              <li key={vao} onDoubleClick={() => createNewEntity(vao)}>
+                <img src="/interface-assets/icons/obj-file-icon.svg" alt={vao} />
+                <span>{vao}</span>
+              </li>
+            )
+          })}
+        </ul>
+      </SimpleBar>
     </div>
   );
 };

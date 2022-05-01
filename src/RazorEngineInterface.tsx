@@ -17,6 +17,7 @@ export const RazorObserverActions = {
   updateObserver: 'RIActions/UPDATE_OBSERVER',
 
   addEntity: 'RIActions/ADD_ENTITY',
+  selectEntity: 'RIActions/SELECT_ENTITY',
 }
 
 export enum ERazorResources {
@@ -31,7 +32,8 @@ interface IResourcesObserver {
 
 interface RazorObserverState {
   resources: IResourcesObserver[],
-  scenes: {name: string, entities: string[]}[]
+  scenes: {name: string, entities: string[]}[],
+  selected: string
 }
 
 const initialState: RazorObserverState = {
@@ -44,7 +46,8 @@ const initialState: RazorObserverState = {
   scenes: [{
     name: 'unique scene',
     entities: []
-  }]
+  }],
+  selected: null
 } 
 
 function razorObserverReducer(draft: RazorObserverState, action: {type: string, payload: unknown}) {
@@ -57,6 +60,9 @@ function razorObserverReducer(draft: RazorObserverState, action: {type: string, 
       break;
     case RazorObserverActions.addEntity:
       draft.scenes[0].entities = [...action.payload as string[]]
+      break;
+    case RazorObserverActions.selectEntity:
+      draft.selected = action.payload as string
       break;
     default:
   }

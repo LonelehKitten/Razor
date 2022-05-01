@@ -5,22 +5,23 @@ import {
   FaChevronLeft,
   FaChevronRight
 } from 'react-icons/fa'
+import { StateSetter } from '@custom-types/react-hooks';
 
 interface UIInputSliderProps {
-  
+  value: BigFloat32
+  onActionPerformed: StateSetter<BigFloat32>
 }
 
-const UIInputSlider: React.FC<UIInputSliderProps> = () => {
-  const [value, setValue] = useState<BigFloat32>(new BigFloat32(0));
+const UIInputSlider: React.FC<UIInputSliderProps> = (props) => {
   const [writeMode, setWriteMode] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement>();
   const displayRef = useRef<HTMLDivElement>();
   const clicked = useRef<boolean>(false);
 
   useEffect(() => {
-    inputRef.current.valueAsNumber = Number(formatValue(value))
-    displayRef.current.innerText = formatValue(value)
-  }, [value]);
+    inputRef.current.valueAsNumber = Number(formatValue(props.value))
+    displayRef.current.innerText = formatValue(props.value)
+  }, [props.value]);
 
   function enterInput() {
     setWriteMode(true)
@@ -28,7 +29,7 @@ const UIInputSlider: React.FC<UIInputSliderProps> = () => {
   }
 
   function exitInput() {
-    setValue(new BigFloat32(inputRef.current.valueAsNumber+0.01))
+    props.onActionPerformed(new BigFloat32(inputRef.current.valueAsNumber+0.01))
     setWriteMode(false)
   }
 
@@ -39,8 +40,8 @@ const UIInputSlider: React.FC<UIInputSliderProps> = () => {
       e.clientX < div.offsetLeft+div.offsetWidth &&
       e.clientY > div.offsetTop &&
       e.clientY < div.offsetTop+div.offsetHeight
-  )) {
-      setValue(oldValue => oldValue.add(new BigFloat32('0.01').mul(e.movementX > 0 ? 1 : -1)))
+    )) {
+      props.onActionPerformed(oldValue => oldValue.add(new BigFloat32('0.1').mul(e.movementX > 0 ? 1 : -1)))
     }
   }
 
@@ -53,11 +54,17 @@ const UIInputSlider: React.FC<UIInputSliderProps> = () => {
   }
 
   function decrease() {
-    setValue(oldValue => oldValue.add(new BigFloat32('-0.01')))
+    props.onActionPerformed(oldValue => oldValue.add(new BigFloat32('-1')))
   }
 
   function increase() {
-    setValue(oldValue => oldValue.add(new BigFloat32('0.01')))
+    props.onActionPerformed(oldValue => oldValue.add(new BigFloat32('1')))
+  }
+
+  function handleKeyUp(e: React.KeyboardEvent) {
+    if(e.key === 'Enter') {
+      exitInput()
+    }
   }
 
   return (
@@ -75,6 +82,7 @@ const UIInputSlider: React.FC<UIInputSliderProps> = () => {
           ref={inputRef} 
           type="number" 
           onBlur={exitInput}
+          onKeyUp={handleKeyUp}
           style={{
             zIndex: writeMode ? '1' : '0'
           }}
