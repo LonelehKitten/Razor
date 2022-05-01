@@ -8,8 +8,8 @@ import {
 import { StateSetter } from '@custom-types/react-hooks';
 
 interface UIInputSliderProps {
-  value: BigFloat32
-  onActionPerformed: StateSetter<BigFloat32>
+  value: number
+  onActionPerformed: StateSetter<number>
 }
 
 const UIInputSlider: React.FC<UIInputSliderProps> = (props) => {
@@ -19,7 +19,7 @@ const UIInputSlider: React.FC<UIInputSliderProps> = (props) => {
   const clicked = useRef<boolean>(false);
 
   useEffect(() => {
-    inputRef.current.valueAsNumber = Number(formatValue(props.value))
+    inputRef.current.valueAsNumber = props.value/100
     displayRef.current.innerText = formatValue(props.value)
   }, [props.value]);
 
@@ -29,24 +29,35 @@ const UIInputSlider: React.FC<UIInputSliderProps> = (props) => {
   }
 
   function exitInput() {
-    props.onActionPerformed(new BigFloat32(inputRef.current.valueAsNumber+0.01))
+    props.onActionPerformed(Math.round(inputRef.current.valueAsNumber*100))
     setWriteMode(false)
   }
 
   function changeValue(e: React.MouseEvent) {
     const div = displayRef.current
-    if(clicked.current && e.button === 0 && (
-      e.clientX > div.offsetLeft &&
-      e.clientX < div.offsetLeft+div.offsetWidth &&
-      e.clientY > div.offsetTop &&
-      e.clientY < div.offsetTop+div.offsetHeight
+
+    const container = div.parentElement.parentElement.parentElement
+    .parentElement.parentElement.parentElement
+    .parentElement.parentElement.parentElement
+    .parentElement.parentElement
+    
+    const scrollTopInPX = (container.lastChild.firstChild as HTMLDivElement).getAttribute('style').split(',')[1]
+
+    const scrollTop = Number(scrollTopInPX.substring(0, scrollTopInPX.length-2))
+    
+    if(clicked.current && e.movementX !== 0 && e.button === 0 && (
+      e.clientX > container.offsetLeft+div.offsetLeft &&
+      e.clientX < container.offsetLeft+div.offsetLeft+div.offsetWidth &&
+      e.clientY > container.offsetTop-scrollTop+div.offsetTop &&
+      e.clientY < container.offsetTop+div.offsetTop-scrollTop+div.offsetHeight
     )) {
-      props.onActionPerformed(oldValue => oldValue.add(new BigFloat32('0.1').mul(e.movementX > 0 ? 1 : -1)))
+      const v = e.movementX > 0 ? 10 : -10
+      props.onActionPerformed(oldValue => oldValue+v)
     }
   }
 
-  function formatValue(value: BigFloat32): string {
-    const v = value.toString()
+  function formatValue(value: number): string {
+    const v = (value/100).toString()
     if(v.includes('.')) {
       return v.substring(0, v.indexOf('.')+3)
     }
@@ -54,11 +65,11 @@ const UIInputSlider: React.FC<UIInputSliderProps> = (props) => {
   }
 
   function decrease() {
-    props.onActionPerformed(oldValue => oldValue.add(new BigFloat32('-1')))
+    props.onActionPerformed(oldValue => oldValue-100)
   }
 
   function increase() {
-    props.onActionPerformed(oldValue => oldValue.add(new BigFloat32('1')))
+    props.onActionPerformed(oldValue => oldValue+100)
   }
 
   function handleKeyUp(e: React.KeyboardEvent) {

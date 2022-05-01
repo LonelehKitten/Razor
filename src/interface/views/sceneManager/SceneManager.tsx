@@ -14,10 +14,22 @@ const SceneManager: React.FC<SceneManagerProps> = () => {
   const razorContext = useContext(RazorContext);
 
   function selectEntity(entityName: string) {
-    razorContext.observerDispatch({
-      type: RazorObserverActions.selectEntity,
-      payload: entityName
-    })
+    if(core.getSceneManager().getActive().has(entityName)) {
+      razorContext.observerDispatch({
+        type: RazorObserverActions.selectEntity,
+        payload: entityName
+      })
+    }
+  }
+
+  function removeEntity(entityName: string) {
+    core.removeEntity(entityName)
+    if(core.getSceneManager().getActive().getKeys().length === 0) {
+      razorContext.observerDispatch({
+        type: RazorObserverActions.selectEntity,
+        payload: null
+      })
+    }
   }
 
   return (
@@ -32,7 +44,7 @@ const SceneManager: React.FC<SceneManagerProps> = () => {
                 className={`${razorContext.observers.selected === i ? 'selected' : ''}`}
               >
                 <div> {i} </div>
-                <button type="button" onClick={() => core.removeEntity(i)}>
+                <button type="button" onClick={() => removeEntity(i)}>
                   <FaTrashAlt  />
                 </button>
               </li>

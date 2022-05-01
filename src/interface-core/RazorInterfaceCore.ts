@@ -84,18 +84,7 @@ class RazorInterfaceCore extends GameCore {
     const simpleRenderer = new SimpleRenderer(this._camera);
     this.getRenderStrategy().add(simpleRenderer)
 
-    this.getSceneManager()
-      .add(new Scene('scene1'), true)
-      .get('scene1')
-      .add(new SimpleEntity(
-        'entity1', 
-        ResourceLoader.getVAO('spider'), 
-        ResourceLoader.getShader('shader1'),
-        simpleRenderer
-      ))
-      .get('entity1')
-      .getTransform()
-      .setTranslation(new Vec3(0, 0, 3))
+    this.getSceneManager().add(new Scene('scene1'), true)
 
 
   }
@@ -130,7 +119,9 @@ class RazorInterfaceCore extends GameCore {
       ))
       .get(name)
       .getTransform()
-      .setTranslation(new Vec3(0, 0, 3))
+      .setTranslation(new Vec3(0, 0, 0))
+    scene.get(name).getTransform().setRotation(new Vec3(0, 0, 0))
+    scene.get(name).getTransform().setScale(new Vec3(1, 1, 1))
 
     if(this._sceneObserver) {
       this._sceneObserver(scene.getKeys())

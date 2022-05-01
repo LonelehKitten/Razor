@@ -1,28 +1,28 @@
 import Vec3 from '@engine/math/Vec3';
 import UIInputSlider from '@ui/inputslider/UIInputSlider';
-import { BigFloat32 } from 'bigfloat';
+//import { BigFloat32 } from 'bigfloat';
 import React, { useEffect, useState } from 'react';
 
 interface PropertyProps {
   title: string
   defaultValue?: Vec3
-  setProperty: (x: BigFloat32, y: BigFloat32, z: BigFloat32) => void
+  setProperty: (x: number, y: number, z: number) => void
 }
 
 const Property: React.FC<PropertyProps> = (props) => {
-  const [x, setX] = useState<BigFloat32>(new BigFloat32(props.defaultValue?.x ?? 0));
-  const [y, setY] = useState<BigFloat32>(new BigFloat32(props.defaultValue?.y ?? 0));
-  const [z, setZ] = useState<BigFloat32>(new BigFloat32(props.defaultValue?.z ?? 0));
+  const [x, setX] = useState<number>(props.defaultValue ? props.defaultValue.x*100 : 0);
+  const [y, setY] = useState<number>(props.defaultValue ? props.defaultValue.y*100 : 0);
+  const [z, setZ] = useState<number>(props.defaultValue ? props.defaultValue.z*100 : 0);
 
   useEffect(() => {
-    props.setProperty(x, y, z)
+    props.setProperty(x/100, y/100, z/100)
   }, [x, y, z]);
 
   useEffect(() => {
     if(props.defaultValue) {
-      setX(new BigFloat32(props.defaultValue.x))
-      setY(new BigFloat32(props.defaultValue.y))
-      setZ(new BigFloat32(props.defaultValue.z))
+      setX(props.defaultValue.x*100)
+      setY(props.defaultValue.y*100)
+      setZ(props.defaultValue.z*100)
     }
   }, [props.defaultValue]);
 
