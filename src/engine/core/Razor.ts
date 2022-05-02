@@ -10,6 +10,7 @@ class Razor {
 
     public static CANVAS: HTMLCanvasElement;
     public static FOCUSED: boolean
+    public static IS_MOUSE_INSIDE: boolean
 
     private _gameLoop: GameLoop;
     private _gameCore: GameCore;
@@ -47,13 +48,21 @@ class Razor {
 
     private configs() {
         window.addEventListener('click', (e) => {
-            Razor.FOCUSED = (
-                e.clientX > Razor.CANVAS.offsetLeft &&
-                e.clientX < Razor.CANVAS.offsetLeft+Razor.CANVAS.offsetWidth &&
-                e.clientY > Razor.CANVAS.offsetTop &&
-                e.clientY < Razor.CANVAS.offsetTop+Razor.CANVAS.offsetHeight
-            )
+            Razor.FOCUSED = Razor.isInsideCanvas(e.clientX, e.clientY)
         })
+
+        window.addEventListener('mousemove', (e) => {
+            Razor.IS_MOUSE_INSIDE = Razor.isInsideCanvas(e.clientX, e.clientY)
+        })
+    }
+
+    public static isInsideCanvas(x: number, y: number) {
+        return (
+            x > Razor.CANVAS.offsetLeft &&
+            x < Razor.CANVAS.offsetLeft+Razor.CANVAS.offsetWidth &&
+            y > Razor.CANVAS.offsetTop &&
+            y < Razor.CANVAS.offsetTop+Razor.CANVAS.offsetHeight
+        )
     }
 
     public isStarted(): boolean {

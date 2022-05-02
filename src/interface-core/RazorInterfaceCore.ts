@@ -175,11 +175,6 @@ class RazorInterfaceCore extends GameCore {
 
     const data = this._editorRenderer.getTexture().getData()
 
-    console.log(Razor.CANVAS.offsetTop+Razor.CANVAS.height, mouseY, 
-      (data.length - mouseY * Razor.CANVAS.width * 4 - 1) / (Razor.CANVAS.width*4), 
-      (mouseY * Razor.CANVAS.width * 4) / (Razor.CANVAS.width*4));
-    
-
     const color = [
       data.at((data.length - mouseY * Razor.CANVAS.width * 4 - 1) - (Razor.CANVAS.width - mouseX) * 4 - 3),
       data.at((data.length - mouseY * Razor.CANVAS.width * 4 - 1) - (Razor.CANVAS.width - mouseX) * 4 - 2),

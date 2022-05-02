@@ -43,11 +43,7 @@ const UIInputSlider: React.FC<UIInputSliderProps> = (props) => {
     
     const scrollTopInPX = (container.lastChild.firstChild as HTMLDivElement).getAttribute('style').split(',')[1]
 
-    if(!scrollTopInPX) {
-      return;
-    }
-
-    const scrollTop = Number(scrollTopInPX.substring(0, scrollTopInPX.length-2))
+    const scrollTop = scrollTopInPX ? Number(scrollTopInPX.substring(0, scrollTopInPX.length-2)) : 0
     
     if(clicked.current && e.movementX !== 0 && e.button === 0 && (
       e.clientX > container.offsetLeft+div.offsetLeft &&

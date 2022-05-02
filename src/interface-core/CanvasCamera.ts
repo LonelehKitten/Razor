@@ -1,3 +1,4 @@
+import Razor from "@engine/core/Razor";
 import Transform from "@engine/math/Transform";
 import Camera from "../engine/core/Camera";
 import InputManager, {Keys} from "../engine/core/InputManager";
@@ -85,12 +86,14 @@ class CanvasCamera extends Camera {
             this._previousMousePosition.assign(this._currentMousePosition);
 
 
-            if(this._cameraObserver) {
+            if(this._cameraObserver && Razor.IS_MOUSE_INSIDE) {
                 this._cameraObserver(this.getTransform())
             }
         }
 
     }
+
+    public
 
     public isSelected(): boolean {
         return this._selected;
