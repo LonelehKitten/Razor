@@ -19,6 +19,7 @@ const SceneManager: React.FC<SceneManagerProps> = () => {
         type: RazorObserverActions.selectEntity,
         payload: entityName
       })
+      core.setSelectedEntity(entityName)
     }
   }
 
@@ -29,6 +30,7 @@ const SceneManager: React.FC<SceneManagerProps> = () => {
         type: RazorObserverActions.selectEntity,
         payload: null
       })
+      core.setSelectedEntity(null)
     }
   }
 

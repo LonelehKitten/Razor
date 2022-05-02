@@ -1,4 +1,5 @@
-precision mediump float;
+#version 100
+precision highp float;
 
 varying vec4 v_color;
 

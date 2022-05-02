@@ -1,3 +1,4 @@
+import SimpleEntity from "@interface-core/entities/SimpleEntity";
 import Renderer from "@engine/renderer/Renderer";
 import ResourceLoader from "@engine/core/ResourceLoader";
 import { gl } from "@engine/gl/GLUtils";
@@ -42,6 +43,7 @@ class SimpleRenderer extends Renderer {
 
             this.getEntitiesByShader(shader). forEach((entity: Entity) => {
                 shader.setMatrix4x4('u_transform', entity.getTransform().toMatrix());
+                shader.setInt('u_selected', Number((entity as SimpleEntity).isSelected()));
                 entity.getVAO().bind()
                 gl.drawElements(gl.TRIANGLES, entity.getVAO().getIbo().getLength(), gl.UNSIGNED_SHORT, 0);
                 entity.getVAO().unbind();

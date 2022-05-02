@@ -1,22 +1,29 @@
+import bufferImage from 'buffer-image'
 import VBO from "@engine/buffer/VBO";
 import GameCore from "@engine/core/GameCore";
+import Razor from "@engine/core/Razor";
 import ResourceLoader from "@engine/core/ResourceLoader";
 import Scene from "@engine/core/Scene";
 import Vec3 from "@engine/math/Vec3";
 import CanvasCamera from "./CanvasCamera";
 import SimpleEntity from "./entities/SimpleEntity";
+import EditorRenderer from "./renderers/EditorRenderer";
 import SimpleRenderer from "./renderers/SimpleRenderer";
 
 
 class RazorInterfaceCore extends GameCore {
 
   private _camera: CanvasCamera
+  private _editorRenderer: EditorRenderer
 
   private _sceneObserver: (keys: string[]) => void;
+
+  private _selectedEntity: string
 
   public constructor(sceneObserver: (keys: string[]) => void) {
     super()
     this._sceneObserver = sceneObserver
+    this._selectedEntity = null
   }
   
   public start(): void {
@@ -25,11 +32,18 @@ class RazorInterfaceCore extends GameCore {
 
     // ========= SHADER ==========
 
-    ResourceLoader.loadShader([{
-      name: 'shader1',
-      vertexShaderPathname: '/resources/shader/vert.glsl', 
-      fragmentShaderPathname: '/resources/shader/frag.glsl'
-    }])
+    ResourceLoader.loadShader([
+      {
+        name: 'shader1',
+        vertexShaderPathname: '/resources/shader/vert.glsl', 
+        fragmentShaderPathname: '/resources/shader/frag.glsl'
+      },
+      {
+        name: 'editor-shader',
+        vertexShaderPathname: '/resources/shader/editor.vert.glsl', 
+        fragmentShaderPathname: '/resources/shader/editor.frag.glsl'
+      }
+    ])
     .forEachShader((shader) => {
       shader.create();
     })
@@ -86,6 +100,7 @@ class RazorInterfaceCore extends GameCore {
 
     this.getSceneManager().add(new Scene('scene1'), true)
 
+    this._editorRenderer = new EditorRenderer(this._camera, this.getSceneManager())
 
   }
 
@@ -96,6 +111,7 @@ class RazorInterfaceCore extends GameCore {
   }
 
   public render(): void {
+    this._editorRenderer.render();
     super.render();
   }
 
@@ -136,6 +152,54 @@ class RazorInterfaceCore extends GameCore {
     if(this._sceneObserver) {
       this._sceneObserver(scene.getKeys())
     }
+  }
+
+  public selectEntity(mouseX: number, mouseY: number): string {
+
+    mouseX -= Razor.CANVAS.offsetLeft
+    mouseY -= Razor.CANVAS.offsetTop
+
+    const data = this._editorRenderer.getTexture().getData()
+
+    console.log(Razor.CANVAS.offsetTop+Razor.CANVAS.height, mouseY, 
+      (data.length - mouseY * Razor.CANVAS.width * 4 - 1) / (Razor.CANVAS.width*4), 
+      (mouseY * Razor.CANVAS.width * 4) / (Razor.CANVAS.width*4));
+    
+
+    const color = [
+      data.at((data.length - mouseY * Razor.CANVAS.width * 4 - 1) - (Razor.CANVAS.width - mouseX) * 4 - 3),
+      data.at((data.length - mouseY * Razor.CANVAS.width * 4 - 1) - (Razor.CANVAS.width - mouseX) * 4 - 2),
+      data.at((data.length - mouseY * Razor.CANVAS.width * 4 - 1) - (Razor.CANVAS.width - mouseX) * 4 - 1),
+      data.at((data.length - mouseY * Razor.CANVAS.width * 4 - 1) - (Razor.CANVAS.width - mouseX) * 4),
+    ]
+
+    if(color[3] > 0) {
+
+      const id = color[0] * 256**2 + color[1] * 256 + color[2]
+  
+      const entities = this.getSceneManager().getActive()
+        .filterVisible((entity) => (entity as SimpleEntity).getId() === id)
+
+      if(entities.length > 0) {
+        this.setSelectedEntity(entities[0].getName())
+        return this._selectedEntity
+      }
+      
+    }
+    
+    return null
+  }
+
+  public setSelectedEntity(entity: string) {
+    if(this._selectedEntity) {
+      (this.getSceneManager().getActive().get(this._selectedEntity) as SimpleEntity)
+        .setSelected(false);
+    }
+    if(entity) {
+      (this.getSceneManager().getActive().get(entity) as SimpleEntity)
+      .setSelected(true)
+    }
+    this._selectedEntity = entity
   }
 
 }

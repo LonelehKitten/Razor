@@ -4,8 +4,15 @@ import Renderer from "@engine/renderer/Renderer";
 import Shader from "@engine/tools/Shader";
 
 class SimpleEntity extends Entity {
+
+    private _id: number
+
+    private _selected: boolean
+
     public constructor(name: string, vao: VAO, shader: Shader, renderer: Renderer) {
         super(name, vao, shader, renderer);
+        this._id = 0;
+        this._selected = false
     }
 
     public update(time: number, delta: number): void {
@@ -25,6 +32,22 @@ class SimpleEntity extends Entity {
 
         */
 
+    }
+
+    public getId(): number {
+        return this._id;
+    }
+
+    public setId(id: number): void {
+        this._id = id
+    }
+
+    public isSelected(): boolean {
+        return this._selected;
+    }
+
+    public setSelected(selected: boolean): void {
+        this._selected = selected
     }
 }
 

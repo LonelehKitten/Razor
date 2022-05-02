@@ -17,6 +17,10 @@ class GLUtils {
         return canvas;
     }
 
+    public static draw(vaoLength: number) {
+        gl.drawElements(gl.TRIANGLES, vaoLength, gl.UNSIGNED_SHORT, 0);
+    }
+
 }
 
 export default GLUtils;

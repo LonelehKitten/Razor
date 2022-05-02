@@ -27,7 +27,7 @@
     "**/*.ts",
     "**/*.d.ts",
     "**/*.tsx"
-  ],
+, "src/index.jsx"  ],
   "exclude": [
     "node_modules",
     "tsconfig.json",
