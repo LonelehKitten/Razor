@@ -1,34 +1,48 @@
-import bufferImage from 'buffer-image'
+import Camera from '@engine/core/Camera';
 import VBO from "@engine/buffer/VBO";
 import GameCore from "@engine/core/GameCore";
 import Razor from "@engine/core/Razor";
 import ResourceLoader from "@engine/core/ResourceLoader";
 import Scene from "@engine/core/Scene";
 import Vec3 from "@engine/math/Vec3";
+import Transform from '@engine/math/Transform';
 import CanvasCamera from "./CanvasCamera";
 import SimpleEntity from "./entities/SimpleEntity";
 import EditorRenderer from "./renderers/EditorRenderer";
 import SimpleRenderer from "./renderers/SimpleRenderer";
+import CameraManager from './CameraManager';
 
 
 class RazorInterfaceCore extends GameCore {
 
-  private _camera: CanvasCamera
   private _editorRenderer: EditorRenderer
 
+  private _cameraManager: CameraManager
+
   private _sceneObserver: (keys: string[]) => void;
-
+  private _cameraManagerObserver: (keys: string[]) => void
+  private _cameraObserver: (transform: Transform) => void
   private _selectedEntity: string
+  private _selectedCamera: string
 
-  public constructor(sceneObserver: (keys: string[]) => void) {
+  public constructor(
+    sceneObserver: (keys: string[]) => void,
+    cameraObserver: (transform: Transform) => void,
+    cameraManagerObserver: (keys: string[]) => void
+  ) {
     super()
     this._sceneObserver = sceneObserver
+    this._cameraManagerObserver = cameraManagerObserver
+    this._cameraObserver = cameraObserver
     this._selectedEntity = null
+    this._cameraManager = new CameraManager(this.getRenderStrategy())
   }
   
   public start(): void {
 
-    this._camera = new CanvasCamera();
+    this.createNewCamera()
+    this.setSelectedCamera('camera0')
+    this.getCameraManager().setActive('camera0');
 
     // ========= SHADER ==========
 
@@ -95,19 +109,19 @@ class RazorInterfaceCore extends GameCore {
       vao.create();
     })
 
-    const simpleRenderer = new SimpleRenderer(this._camera);
+    const simpleRenderer = new SimpleRenderer(this._cameraManager);
     this.getRenderStrategy().add(simpleRenderer)
 
     this.getSceneManager().add(new Scene('scene1'), true)
 
-    this._editorRenderer = new EditorRenderer(this._camera, this.getSceneManager())
+    this._editorRenderer = new EditorRenderer(this._cameraManager, this.getSceneManager())
 
   }
 
   public update(time: number, delta: number): void {
     super.update(time, delta);
 
-    this._camera.update(delta)
+    this._cameraManager.getActive().update(delta)
   }
 
   public render(): void {
@@ -200,6 +214,45 @@ class RazorInterfaceCore extends GameCore {
       .setSelected(true)
     }
     this._selectedEntity = entity
+  }
+
+  public getCameraManager(): CameraManager {
+    return this._cameraManager
+  }
+
+  public createNewCamera(): void {
+
+    let name = 'camera'
+    for (let i = 0; i < Number.MAX_SAFE_INTEGER; i++) {
+      if(!this.getCameraManager().has(name+i)) {
+        name += i
+        break;
+      }
+    }
+
+    this.getCameraManager()
+      .add(new CanvasCamera(name, this._cameraObserver))
+      .get(name)
+      .getTransform()
+      .setTranslation(new Vec3(0, 0, 0))
+    this.getCameraManager().get(name).getTransform().setRotation(new Vec3(0, 0, 0))
+    this.getCameraManager().get(name).getTransform().setScale(new Vec3(1, 1, 1))
+
+    if(this._sceneObserver) {
+      this._cameraManagerObserver(this.getCameraManager().getKeys())
+    }
+  }
+
+  public setSelectedCamera(camera: string) {
+    if(this._selectedCamera) {
+      (this.getCameraManager().get(this._selectedCamera) as CanvasCamera)
+        .setSelected(false);
+    }
+    if(camera) {
+      (this.getCameraManager().get(camera) as CanvasCamera)
+      .setSelected(true)
+    }
+    this._selectedCamera = camera
   }
 
 }

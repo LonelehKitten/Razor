@@ -43,7 +43,7 @@ const SceneManager: React.FC<SceneManagerProps> = () => {
               <li 
                 key={i} 
                 onClick={() => selectEntity(i)}
-                className={`${razorContext.observers.selected === i ? 'selected' : ''}`}
+                className={`${razorContext.observers.selected.entity === i ? 'selected' : ''}`}
               >
                 <div> {i} </div>
                 <button type="button" onClick={() => removeEntity(i)}>

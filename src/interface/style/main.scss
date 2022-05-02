@@ -4,9 +4,11 @@
 
 @import '@views/resourceManager/resource-manager';
 @import '@views/sceneManager/scene-manager';
-@import '@views/entityProperties/entity-properties';
+@import '@views/propertiesContainer/properties-container';
 
 @import '@components/property/property';
+@import '@components/entityProperties/entity-properties';
+@import '@components/cameraProperties/camera-properties';
 
 @import '@ui/buttons/ui-button';
 @import '@ui/inputslider/input-slider';

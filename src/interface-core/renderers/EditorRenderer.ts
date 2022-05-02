@@ -6,7 +6,7 @@ import Razor from "@engine/core/Razor";
 import Shader from "@engine/tools/Shader";
 import ResourceLoader from "@engine/core/ResourceLoader";
 import SimpleEntity from "@interface-core/entities/SimpleEntity";
-import CanvasCamera from "@interface-core/CanvasCamera";
+import CameraManager from "@interface-core/CameraManager";
 import Mat4 from "@engine/math/Mat4";
 
 class EditorRenderer extends Renderer {
@@ -18,13 +18,13 @@ class EditorRenderer extends Renderer {
     private _shader: Shader
 
     private _projection: Mat4;
-    private _camera: CanvasCamera
+    private _cameraManager: CameraManager
 
     private _id: number
 
-    constructor(camera: CanvasCamera, sceneManager: SceneManager) {
+    constructor(cameraManager: CameraManager, sceneManager: SceneManager) {
       super('editor_renderer')
-      this._camera = camera
+      this._cameraManager = cameraManager
       const vd = gl.getParameter(gl.VIEWPORT)
       this._projection = Mat4.perspective(70, vd[2] / vd[3], 1, 1000)
 
@@ -41,42 +41,45 @@ class EditorRenderer extends Renderer {
 
     public render() {
 
-      this.bind()
+      if(this._cameraManager.getActive()) {
 
-      this._shader.bind();
-
-      this._shader.setMatrix4x4('u_projection', this._projection);
-      this._shader.setMatrix4x4('u_view', Mat4.view(
-          this._camera.getTransform().getTranslation(),
-          this._camera.getTransform().getRotation(),
-      ));
-
-      this._id = 0;
-
-      this._sceneManager.getActive().forEach((entity) => {
-        entity.getVAO().bind();
-        this._shader.setMatrix4x4('u_transform', entity.getTransform().toMatrix());
-        (entity as SimpleEntity).setId(this._id)
-        this._shader.setFloat('u_id', this._id)
-        this._id++
-        GLUtils.draw(entity.getVAO().getIbo().getLength())
-        entity.getVAO().unbind()
-      })
-
-      const data = new Uint8Array(this._texture.getWidth() * this._texture.getHeight() * 4)
-
-      gl.readPixels(
-        0, 
-        0,
-        this._texture.getWidth(),
-        this._texture.getHeight(),
-        gl.RGBA,
-        gl.UNSIGNED_BYTE,
-        data
-      )
-      this._texture.setData(data);
-
-      this.unbind()
+        this.bind()
+  
+        this._shader.bind();
+  
+        this._shader.setMatrix4x4('u_projection', this._projection);
+        this._shader.setMatrix4x4('u_view', Mat4.view(
+          this._cameraManager.getActive().getTransform().getTranslation(),
+          this._cameraManager.getActive().getTransform().getRotation(),
+        ));
+  
+        this._id = 0;
+  
+        this._sceneManager.getActive().forEach((entity) => {
+          entity.getVAO().bind();
+          this._shader.setMatrix4x4('u_transform', entity.getTransform().toMatrix());
+          (entity as SimpleEntity).setId(this._id)
+          this._shader.setFloat('u_id', this._id)
+          this._id++
+          GLUtils.draw(entity.getVAO().getIbo().getLength())
+          entity.getVAO().unbind()
+        })
+  
+        const data = new Uint8Array(this._texture.getWidth() * this._texture.getHeight() * 4)
+  
+        gl.readPixels(
+          0, 
+          0,
+          this._texture.getWidth(),
+          this._texture.getHeight(),
+          gl.RGBA,
+          gl.UNSIGNED_BYTE,
+          data
+        )
+        this._texture.setData(data);
+  
+        this.unbind()
+      }
 
     }
 
