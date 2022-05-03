@@ -24,6 +24,7 @@ export const RazorObserverActions = {
   addCamera: 'RIActions/ADD_CAMERA',
   selectCamera: 'RIActions/SELECT_CAMERA',
   updateCamera: 'RIActions/UPDATE_CAMERA',
+  targetCamera: 'RIActions/TARGET_CAMERA',
 }
 
 export enum ERazorResources {
@@ -52,6 +53,7 @@ interface RazorObserverState {
     entity: string, 
     camera: string
   },
+  targetCamera: string,
   cameraTransform: CameraTransformType
 }
 
@@ -71,6 +73,7 @@ const initialState: RazorObserverState = {
     entity: null,
     camera: null
   },
+  targetCamera: null,
   cameraTransform: {
     translation: [0, 0, 0],
     rotation: [0, 0, 0],
@@ -105,6 +108,9 @@ function razorObserverReducer(draft: RazorObserverState, action: {type: string, 
       draft.cameraTransform.rotation = 
         [...(action.payload as CameraTransformType).rotation as [number, number, number]]
       break;
+    case RazorObserverActions.targetCamera:
+      draft.targetCamera = action.payload as string
+      break;
     default:
   }
 
@@ -124,6 +130,7 @@ export const RazorContext = React.createContext<IRazorContext>({
 function initializeEngine(
   dispatch: (action: {payload: unknown, type: string}) => void,
   ref: React.MutableRefObject<HTMLCanvasElement>,
+  getObservers: () => RazorObserverState,
   observerDispatch: React.Dispatch<{ type: string, payload: unknown}>
 ) {
 
@@ -137,12 +144,13 @@ function initializeEngine(
 
   function cameraManagerObserver(keys: string[]) {
     observerDispatch({
-      type: RazorObserverActions.selectCamera,
+      type: RazorObserverActions.addCamera,
       payload: keys
     })
-  }
+  } 
 
-  function cameraObserver(transform: Transform) {
+  function cameraObserver(camera:string, transform: Transform) {
+    
     observerDispatch({
       type: RazorObserverActions.updateCamera,
       payload: {
@@ -158,6 +166,7 @@ function initializeEngine(
         ],
       }
     })
+    
   }
 
 
@@ -182,6 +191,7 @@ function initializeEngine(
   dispatch(RazorActions.start())
 
   cameraManagerObserver(['camera0'])
+  
 }
 
 
@@ -192,8 +202,12 @@ function RazorEngineInterface() {
 
   const [observers, observerDispatch] = useReducer(produce(razorObserverReducer), initialState);
 
+  function getObservers() {
+    return observers;
+  }
+
   useEffect(() => {
-    initializeEngine(dispatch, ref, observerDispatch)
+    initializeEngine(dispatch, ref, getObservers, observerDispatch)
   }, []);
 
   const contextValue = useMemo<IRazorContext>(() => ({observers, observerDispatch}), [observers])

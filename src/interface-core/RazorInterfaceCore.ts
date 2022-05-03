@@ -21,13 +21,13 @@ class RazorInterfaceCore extends GameCore {
 
   private _sceneObserver: (keys: string[]) => void;
   private _cameraManagerObserver: (keys: string[]) => void
-  private _cameraObserver: (transform: Transform) => void
+  private _cameraObserver: (camera: string, transform: Transform) => void
   private _selectedEntity: string
   private _selectedCamera: string
 
   public constructor(
     sceneObserver: (keys: string[]) => void,
-    cameraObserver: (transform: Transform) => void,
+    cameraObserver: (camera: string, transform: Transform) => void,
     cameraManagerObserver: (keys: string[]) => void
   ) {
     super()
@@ -215,7 +215,7 @@ class RazorInterfaceCore extends GameCore {
     return this._cameraManager
   }
 
-  public createNewCamera(): void {
+  public createNewCamera(): string {
 
     let name = 'camera'
     for (let i = 0; i < Number.MAX_SAFE_INTEGER; i++) {
@@ -236,6 +236,8 @@ class RazorInterfaceCore extends GameCore {
     if(this._sceneObserver) {
       this._cameraManagerObserver(this.getCameraManager().getKeys())
     }
+
+    return name
   }
 
   public setSelectedCamera(camera: string) {
