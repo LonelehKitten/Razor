@@ -1,8 +1,6 @@
 
 
 .resource-manager {
-  
-  padding: 1rem;
   overflow: hidden;
 
   & > 
@@ -13,7 +11,7 @@
   .simplebar-content-wrapper >
   .simplebar-content >
   ul {
-
+    padding: 1rem;
     display: flex;
     flex-wrap: wrap;
 

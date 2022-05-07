@@ -35,7 +35,7 @@ const UICombo: React.FC<UIComboProps> = (props) => {
   const width = ref.current ? ref.current.offsetWidth - 2 : 0;
 
   const height = useMemo<number>((): number => {
-    return props.items.length * 28 + (props.strict ? 0 : 28) + 1;
+    return props.items.length * 29 + (props.strict ? 0 : 29);
   }, [props.items, props.strict])
 
   const getX = useCallback((): number => {

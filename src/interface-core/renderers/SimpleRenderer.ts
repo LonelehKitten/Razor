@@ -15,7 +15,7 @@ class SimpleRenderer extends Renderer {
         super('renderer1')
         this._cameraManager = cameraManager
         const vd = gl.getParameter(gl.VIEWPORT)
-        this._projection = Mat4.perspective(70, vd[2] / vd[3], 1, 1000)
+        this._projection = Mat4.perspective(60, vd[2] / vd[3], 1, 1000)
         //this._projection = Mat4.perspective(70, window.innerWidth / window.innerHeight, 1, 1000)
         /*
         this._ortho = Mat4.orthographic(
