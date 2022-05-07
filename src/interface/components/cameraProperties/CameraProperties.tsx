@@ -11,6 +11,7 @@ import SimpleBar from 'simplebar-react';
 import {BsPlus} from 'react-icons/bs'
 import {BiTargetLock} from 'react-icons/bi'
 import UIButton from '@ui/buttons/UIButton';
+import UICombo from '@ui/combo/UICombo';
 
 interface CameraPropertiesProps {
   show: boolean
@@ -20,18 +21,19 @@ const CameraProperties: React.FC<CameraPropertiesProps> = (props) => {
   
   const core = useGameCore()
   const razorContext = useContext(RazorContext);
-  const selectRef = useRef<HTMLSelectElement>();
+  //const cameraSelectRef = useRef<HTMLSelectElement>();
+  const entitySelectRef = useRef<HTMLSelectElement>();
 
   const translation = new Vec3(
-    razorContext.observers.cameraTransform.translation[0],
-    razorContext.observers.cameraTransform.translation[1],
-    razorContext.observers.cameraTransform.translation[2],
+    razorContext.observers.camera.transform.translation[0],
+    razorContext.observers.camera.transform.translation[1],
+    razorContext.observers.camera.transform.translation[2],
   )
 
   const rotation = new Vec3(
-    razorContext.observers.cameraTransform.rotation[0],
-    razorContext.observers.cameraTransform.rotation[1],
-    razorContext.observers.cameraTransform.rotation[2],
+    razorContext.observers.camera.transform.rotation[0],
+    razorContext.observers.camera.transform.rotation[1],
+    razorContext.observers.camera.transform.rotation[2],
   )
 
   function setTranslation(x: number, y: number, z: number) {
@@ -71,7 +73,7 @@ const CameraProperties: React.FC<CameraPropertiesProps> = (props) => {
     })
   }, [])
 
-  function targetCamera(camera = selectRef.current.value) {
+  function targetCamera(camera: string) {// = cameraSelectRef.current.value) {
     core.getCameraManager().setActive(camera)
     razorContext.observerDispatch({
       type: RazorObserverActions.targetCamera,
@@ -79,7 +81,7 @@ const CameraProperties: React.FC<CameraPropertiesProps> = (props) => {
     })
   }
 
-  function selectCamera(camera = selectRef.current.value) {
+  function selectCamera(camera: string) {// = cameraSelectRef.current.value) {
     core.setSelectedCamera(camera)
     const transform = core.getCameraManager().get(camera).getTransform()
     razorContext.observerDispatch({
@@ -109,31 +111,37 @@ const CameraProperties: React.FC<CameraPropertiesProps> = (props) => {
     targetCamera(newCamera)
   }
 
+  function lockIn(entity: string) {
+    core.lockCamera(entity)
+    //const transform = core.getCameraManager().get(razorContext.observers.selected.camera).getTransform()
+    razorContext.observerDispatch({
+      type: RazorObserverActions.lockCamera,
+      payload: entity
+    })
+    
+  }
+
   return (
     <SimpleBar 
       className={`camera-properties ${!props.show && 'hidden'}`}
       style={{ maxHeight: '100%' }}
     >
-      <h3> {`Camera Properties - ${razorContext.observers.targetCamera ?? ''}`} </h3>
-      <div>
-        <select 
-          ref={selectRef}
-          name="cameras" 
-          id="cameras"
+      <h3> {`Camera Properties - ${razorContext.observers.camera.target ?? ''}`} </h3>
+      <div className="options">
+        
+
+        <UICombo  
           value={razorContext.observers.selected.camera ?? undefined}
-          onChange={() => selectCamera()}
-        >
-          {razorContext.observers.scenes[0].cameras.map((camera) => {
-            return (
-              <option key={camera} value={camera}> {camera} </option>
-            )
-          })}
-        </select>
+          items={razorContext.observers.scenes[0].cameras}
+          strict
+          onActionPerformed={selectCamera}
+        />
+        
         <UIButton 
           template="simple" 
           icon={BiTargetLock}
           tooltip='Ativar camera'
-          onActionPerformed={() => targetCamera()}
+          onActionPerformed={() => targetCamera(razorContext.observers.selected.camera)}
         ></UIButton>
         <UIButton 
           template="simple" 
@@ -142,14 +150,24 @@ const CameraProperties: React.FC<CameraPropertiesProps> = (props) => {
           onActionPerformed={addCamera}
         ></UIButton>
       </div>
+      <div className="options">
+        
+
+        <UICombo  
+          value={razorContext.observers.camera.lockedIn}
+          items={razorContext.observers.scenes[0].entities}
+          onActionPerformed={lockIn}
+        />
+
+      </div>
       <Property 
         title="Translation" 
-        defaultValue={translation} 
+        vector={translation} 
         setProperty={setTranslation}  
       />
       <Property 
         title="Rotation" 
-        defaultValue={rotation} 
+        vector={rotation} 
         setProperty={setRotation}  
       />
     </SimpleBar>
@@ -158,7 +176,30 @@ const CameraProperties: React.FC<CameraPropertiesProps> = (props) => {
 
 /*
 
-
+<select 
+  ref={cameraSelectRef}
+  value={razorContext.observers.selected.camera ?? undefined}
+  onChange={() => selectCamera()}
+>
+  {razorContext.observers.scenes[0].cameras?.map((camera) => {
+    return (
+      <option key={camera} value={camera}> {camera} </option>
+    )
+  })}
+</select>
+<select 
+          ref={entitySelectRef}
+          
+          onChange={() => {}}
+          
+        >
+          <option value='-'> none </option>
+          {razorContext.observers.scenes[0].entities?.map((entity) => {
+            return (
+              <option key={entity} value={entity}> {entity} </option>
+            )
+          })}
+        </select>
 
 */
 

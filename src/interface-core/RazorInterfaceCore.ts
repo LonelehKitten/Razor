@@ -19,13 +19,13 @@ class RazorInterfaceCore extends GameCore {
 
   private _sceneObserver: (keys: string[]) => void;
   private _cameraManagerObserver: (keys: string[]) => void
-  private _cameraObserver: (camera: string, transform: Transform) => void
+  private _cameraObserver: (transform: Transform) => void
   private _selectedEntity: string
   private _selectedCamera: string
 
   public constructor(
     sceneObserver: (keys: string[]) => void,
-    cameraObserver: (camera: string, transform: Transform) => void,
+    cameraObserver: (transform: Transform) => void,
     cameraManagerObserver: (keys: string[]) => void
   ) {
     super()
@@ -215,6 +215,17 @@ class RazorInterfaceCore extends GameCore {
       .setSelected(true)
     }
     this._selectedCamera = camera
+  }
+
+  public lockCamera(entityName: string) {
+    if(this._selectedCamera) {
+      let entity = null;
+      if(this.getSceneManager().getActive().has(entityName)) {
+        entity = this.getSceneManager().getActive().get(entityName)
+      }
+      (this.getCameraManager().get(this._selectedCamera) as CanvasCamera)
+        .lock(entity)
+    }
   }
 
 }

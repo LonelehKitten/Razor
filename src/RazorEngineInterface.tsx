@@ -25,6 +25,7 @@ export const RazorObserverActions = {
   selectCamera: 'RIActions/SELECT_CAMERA',
   updateCamera: 'RIActions/UPDATE_CAMERA',
   targetCamera: 'RIActions/TARGET_CAMERA',
+  lockCamera: 'RIActions/LOCK_CAMERA',
 }
 
 export enum ERazorResources {
@@ -53,8 +54,11 @@ interface RazorObserverState {
     entity: string, 
     camera: string
   },
-  targetCamera: string,
-  cameraTransform: CameraTransformType
+  camera: {
+    target: string,
+    transform: CameraTransformType,
+    lockedIn: string
+  }
 }
 
 const initialState: RazorObserverState = {
@@ -73,10 +77,13 @@ const initialState: RazorObserverState = {
     entity: null,
     camera: null
   },
-  targetCamera: null,
-  cameraTransform: {
-    translation: [0, 0, 0],
-    rotation: [0, 0, 0],
+  camera: {
+    target: null,
+    transform: {
+      translation: [0, 0, 0],
+      rotation: [0, 0, 0],
+    },
+    lockedIn: ''
   }
 } 
 
@@ -103,13 +110,16 @@ function razorObserverReducer(draft: RazorObserverState, action: {type: string, 
       draft.selected.camera = action.payload as string
       break;
     case RazorObserverActions.updateCamera:
-      draft.cameraTransform.translation = 
+      draft.camera.transform.translation = 
         [...(action.payload as CameraTransformType).translation as [number, number, number]]
-      draft.cameraTransform.rotation = 
+      draft.camera.transform.rotation = 
         [...(action.payload as CameraTransformType).rotation as [number, number, number]]
       break;
     case RazorObserverActions.targetCamera:
-      draft.targetCamera = action.payload as string
+      draft.camera.target = action.payload as string
+      break;
+    case RazorObserverActions.lockCamera:
+      draft.camera.lockedIn = action.payload as string
       break;
     default:
   }
@@ -149,20 +159,21 @@ function initializeEngine(
     })
   } 
 
-  function cameraObserver(camera:string, transform: Transform) {
-    
+  function cameraObserver(transform: Transform) {
+    const translation = transform.getTranslation()
+    const rotation = transform.getRotation()
     observerDispatch({
       type: RazorObserverActions.updateCamera,
       payload: {
         translation: [
-          transform.getTranslation().x,
-          transform.getTranslation().y,
-          transform.getTranslation().z
+          translation.x,
+          translation.y,
+          translation.z
         ],
         rotation: [
-          transform.getRotation().x,
-          transform.getRotation().y,
-          transform.getRotation().z
+          rotation.x,
+          rotation.y,
+          rotation.z
         ],
       }
     })
