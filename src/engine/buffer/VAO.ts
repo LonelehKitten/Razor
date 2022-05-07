@@ -23,6 +23,9 @@ class VAO implements IResource {
                 }
             }
         })
+        if(vboList.length > 0 && !this._ibo) {
+            this._ibo = vboList[0];
+        }
     }
 
     public create() : void {
@@ -100,6 +103,10 @@ class VAO implements IResource {
 
     public getIbo(): VBO {
         return this._ibo;
+    }
+
+    public getLength(): number {
+        return this._ibo.getLength()/3;
     }
 
 }

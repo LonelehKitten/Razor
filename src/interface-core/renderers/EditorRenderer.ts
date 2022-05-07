@@ -61,7 +61,7 @@ class EditorRenderer extends Renderer {
           (entity as SimpleEntity).setId(this._id)
           this._shader.setFloat('u_id', this._id)
           this._id++
-          GLUtils.draw(entity.getVAO().getIbo().getLength())
+          GLUtils.draw(entity.getVAO().getLength())
           entity.getVAO().unbind()
         })
   

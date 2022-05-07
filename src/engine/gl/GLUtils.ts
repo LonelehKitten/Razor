@@ -17,8 +17,12 @@ class GLUtils {
         return canvas;
     }
 
+    public static drawByIndices(iboLength: number) {
+        gl.drawElements(gl.TRIANGLES, iboLength, gl.UNSIGNED_SHORT, 0);
+    }
+
     public static draw(vaoLength: number) {
-        gl.drawElements(gl.TRIANGLES, vaoLength, gl.UNSIGNED_SHORT, 0);
+        gl.drawArrays(gl.TRIANGLES, 0, vaoLength);
     }
 
 }

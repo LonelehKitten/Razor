@@ -103,6 +103,10 @@ class RazorInterfaceCore extends GameCore {
       {
         name: 'spider',
         objectData: '/resources/objects/spider/spider.obj'
+      },
+      {
+        name: 'cube',
+        objectData: '/resources/objects/cube/cube.obj'
       }
     ])
     .forEachVAO((vao) => {

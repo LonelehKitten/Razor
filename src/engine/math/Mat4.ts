@@ -3,7 +3,7 @@ import {Tuple} from './MathTypes'
 import Vec3 from './Vec3';
 import Vec4 from './Vec4';
 
-import {toRadian, mult, equals, transpose} from './math'
+import {toRadian, mult, equals, transpose, inverse, assign} from './math'
 
 export type Matrix4x4OperandType = Mat4 | Vec4
 
@@ -228,6 +228,18 @@ class Mat4 extends Mat {
         );
     }
 
+    public assign(m: Mat4): Mat4 {
+        const matrix: Mat4 = new Mat4();
+
+        assign(
+            4, 
+            (x: number, y: number) => m.get([x, y]),
+            (x: number, y: number, v: number) => this.set([x, y], v),
+        )
+
+        return matrix;
+    }
+
     public transpose(): Mat4 {
         const matrix: Mat4 = new Mat4();
 
@@ -252,7 +264,186 @@ class Mat4 extends Mat {
 
         return matrix;
     }
+/*
+    public inverse(): Mat4 {
 
+        const aux: Mat4 = new Mat4().assign(this);
+        const inv: Mat4 = new Mat4();
+
+        inverse(
+            4, 
+            (x: number, y: number) => aux.get([x, y]),
+            (x: number, y: number) => inv.get([x, y]),
+            (x: number, y: number, v: number) => aux.set([x, y], v),
+            (x: number, y: number, v: number) => inv.set([x, y], v),
+        )
+
+        return inv;
+    }
+*/
+
+    public inverse(): Mat4 {
+        const m = this.toArray()
+        const inv: Mat4 = new Mat4();
+        inv.set([0, 0], 0);
+        inv.set([1, 1], 0);
+        inv.set([2, 2], 0);
+        inv.set([3, 3], 0);
+        let det = 0;
+
+        
+
+        inv.set([0, 0], (
+            m[5]  * m[10] * m[15] - 
+            m[5]  * m[11] * m[14] - 
+            m[9]  * m[6]  * m[15] + 
+            m[9]  * m[7]  * m[14] +
+            m[13] * m[6]  * m[11] - 
+            m[13] * m[7]  * m[10]
+        ))
+
+        inv.set([1, 0], (
+            -m[4]  * m[10] * m[15] + 
+             m[4]  * m[11] * m[14] + 
+             m[8]  * m[6]  * m[15] - 
+             m[8]  * m[7]  * m[14] - 
+             m[12] * m[6]  * m[11] + 
+             m[12] * m[7]  * m[10]
+        ))
+
+        inv.set([2, 0], (
+            m[4]  * m[9]  * m[15] - 
+            m[4]  * m[11] * m[13] - 
+            m[8]  * m[5]  * m[15] + 
+            m[8]  * m[7]  * m[13] + 
+            m[12] * m[5]  * m[11] - 
+            m[12] * m[7]  * m[9]
+        ))
+
+        inv.set([3, 0], (
+            -m[4]  * m[9]  * m[14] + 
+             m[4]  * m[10] * m[13] +
+             m[8]  * m[5]  * m[14] - 
+             m[8]  * m[6]  * m[13] - 
+             m[12] * m[5]  * m[10] + 
+             m[12] * m[6]  * m[9]
+        ))
+
+        inv.set([0, 1], (
+            -m[1]  * m[10] * m[15] + 
+             m[1]  * m[11] * m[14] + 
+             m[9]  * m[2]  * m[15] - 
+             m[9]  * m[3]  * m[14] - 
+             m[13] * m[2]  * m[11] + 
+             m[13] * m[3]  * m[10]
+        ))
+
+        inv.set([1, 1], (
+            m[0]  * m[10] * m[15] - 
+            m[0]  * m[11] * m[14] - 
+            m[8]  * m[2]  * m[15] + 
+            m[8]  * m[3]  * m[14] + 
+            m[12] * m[2]  * m[11] - 
+            m[12] * m[3]  * m[10]
+        ))
+
+        inv.set([2, 1], (
+            -m[0]  * m[9]  * m[15] + 
+             m[0]  * m[11] * m[13] + 
+             m[8]  * m[1]  * m[15] - 
+             m[8]  * m[3]  * m[13] - 
+             m[12] * m[1]  * m[11] + 
+             m[12] * m[3]  * m[9]
+        ))
+
+        inv.set([3, 1], (
+            m[0]  * m[9]  * m[14] - 
+            m[0]  * m[10] * m[13] - 
+            m[8]  * m[1]  * m[14] + 
+            m[8]  * m[2]  * m[13] + 
+            m[12] * m[1]  * m[10] - 
+            m[12] * m[2]  * m[9]
+        ))
+        inv.set([0, 2], (
+            m[1]  * m[6] * m[15] - 
+            m[1]  * m[7] * m[14] - 
+            m[5]  * m[2] * m[15] + 
+            m[5]  * m[3] * m[14] + 
+            m[13] * m[2] * m[7] - 
+            m[13] * m[3] * m[6]
+        ))
+        inv.set([1, 2], (
+            -m[0]  * m[6] * m[15] + 
+             m[0]  * m[7] * m[14] + 
+             m[4]  * m[2] * m[15] - 
+             m[4]  * m[3] * m[14] - 
+             m[12] * m[2] * m[7] + 
+             m[12] * m[3] * m[6]
+        ))
+        inv.set([2, 2], (
+            m[0]  * m[5] * m[15] - 
+            m[0]  * m[7] * m[13] - 
+            m[4]  * m[1] * m[15] + 
+            m[4]  * m[3] * m[13] + 
+            m[12] * m[1] * m[7] - 
+            m[12] * m[3] * m[5]
+        ))
+        inv.set([3, 2], (
+            -m[0]  * m[5] * m[14] + 
+             m[0]  * m[6] * m[13] + 
+             m[4]  * m[1] * m[14] - 
+             m[4]  * m[2] * m[13] - 
+             m[12] * m[1] * m[6] + 
+             m[12] * m[2] * m[5]
+        ))
+        inv.set([0, 3], (
+            -m[1] * m[6] * m[11] + 
+             m[1] * m[7] * m[10] + 
+             m[5] * m[2] * m[11] - 
+             m[5] * m[3] * m[10] - 
+             m[9] * m[2] * m[7] + 
+             m[9] * m[3] * m[6]
+        ))
+        inv.set([1, 3], (
+            m[0] * m[6] * m[11] - 
+            m[0] * m[7] * m[10] - 
+            m[4] * m[2] * m[11] + 
+            m[4] * m[3] * m[10] + 
+            m[8] * m[2] * m[7] - 
+            m[8] * m[3] * m[6]
+        ))
+        inv.set([2, 3], (
+            -m[0] * m[5] * m[11] + 
+             m[0] * m[7] * m[9] + 
+             m[4] * m[1] * m[11] - 
+             m[4] * m[3] * m[9] - 
+             m[8] * m[1] * m[7] + 
+             m[8] * m[3] * m[5]
+        ))
+        inv.set([3, 3], (
+            m[0] * m[5] * m[10] - 
+            m[0] * m[6] * m[9] - 
+            m[4] * m[1] * m[10] + 
+            m[4] * m[2] * m[9] + 
+            m[8] * m[1] * m[6] - 
+            m[8] * m[2] * m[5]
+        ))
+
+        det = m[0] * inv.get([0, 0]) + m[1] * inv.get([1, 0]) + m[2] * inv.get([2, 0]) + m[3] * inv.get([3, 0]);
+
+        if (det === 0)
+            return null;
+
+        det = 1.0 / det;
+        
+        for (let i = 0; i < 4; i++) {
+            for (let j = 0; j < 4; j++) {
+                inv.set([i, j], inv.get([1, j]) * det)
+            }   
+        }
+        
+        return inv;
+    }
 }
 
 export default Mat4;
