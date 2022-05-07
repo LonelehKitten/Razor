@@ -5,26 +5,27 @@ import React, { useEffect, useState } from 'react';
 
 interface PropertyProps {
   title: string
+  vector?: Vec3
   defaultValue?: Vec3
   setProperty: (x: number, y: number, z: number) => void
 }
 
 const Property: React.FC<PropertyProps> = (props) => {
-  const [x, setX] = useState<number>(props.defaultValue ? props.defaultValue.x*100 : 0);
-  const [y, setY] = useState<number>(props.defaultValue ? props.defaultValue.y*100 : 0);
-  const [z, setZ] = useState<number>(props.defaultValue ? props.defaultValue.z*100 : 0);
+  const [x, setX] = useState<number>( props.defaultValue ? props.defaultValue.x*100 : 0 );
+  const [y, setY] = useState<number>( props.defaultValue ? props.defaultValue.y*100 : 0 );
+  const [z, setZ] = useState<number>( props.defaultValue ? props.defaultValue.z*100 : 0 );
 
   useEffect(() => {
     props.setProperty(x/100, y/100, z/100)
   }, [x, y, z]);
 
   useEffect(() => {
-    if(props.defaultValue) {
-      setX(props.defaultValue.x*100)
-      setY(props.defaultValue.y*100)
-      setZ(props.defaultValue.z*100)
+    if(props.vector) {
+      setX(props.vector.x*100)
+      setY(props.vector.y*100)
+      setZ(props.vector.z*100)
     }
-  }, [props.defaultValue]);
+  }, [props.vector]);
 
   return (
     <div className="property">

@@ -46,31 +46,43 @@ class CanvasCamera extends Camera {
         const z = Math.cos(toRadian(this.getTransform().getRotation().y)) * this._speed * delta;
 
         if(InputManager.isKeyPressed(Keys.KEY_W)){ // FRONT
-            this.getTransform().getTranslation().x += -x;
-            this.getTransform().getTranslation().z += -z;
+            const translation = this.getTransform().getTranslation()
+            translation.x += -x;
+            translation.z += -z;
+            this.getTransform().setTranslation(translation)
         }
 
         if(InputManager.isKeyPressed(Keys.KEY_S)){ // BACK
-            this.getTransform().getTranslation().x += x;
-            this.getTransform().getTranslation().z += z;
+            const translation = this.getTransform().getTranslation()
+            translation.x += x;
+            translation.z += z;
+            this.getTransform().setTranslation(translation)
         }
 
         if(InputManager.isKeyPressed(Keys.KEY_A)){ // LEFT
-            this.getTransform().getTranslation().x += -z;
-            this.getTransform().getTranslation().z += x;
+            const translation = this.getTransform().getTranslation()
+            translation.x += -z;
+            translation.z += x;
+            this.getTransform().setTranslation(translation)
         }
 
         if(InputManager.isKeyPressed(Keys.KEY_D)){ // RIGHT
-            this.getTransform().getTranslation().x += z;
-            this.getTransform().getTranslation().z += -x;
+            const translation = this.getTransform().getTranslation()
+            translation.x += z;
+            translation.z += -x;
+            this.getTransform().setTranslation(translation)
         }
 
         if(InputManager.isKeyPressed(Keys.KEY_SPACE)){ // UP
-            this.getTransform().getTranslation().y += this._speed * delta;
+            const translation = this.getTransform().getTranslation()
+            translation.y += this._speed * delta;
+            this.getTransform().setTranslation(translation)
         }
 
         if(InputManager.isKeyPressed(Keys.KEY_ALT_L)){ // DOWN
-            this.getTransform().getTranslation().y += -this._speed * delta;
+            const translation = this.getTransform().getTranslation()
+            translation.y += -this._speed * delta;
+            this.getTransform().setTranslation(translation)
         }
 
         if(InputManager.isMouseLeft()) {

@@ -21,8 +21,7 @@ const EntityProperties: React.FC<EntityPropertiesProps> = (props) => {
     if(razorContext.observers.selected.entity) {
       core.getSceneManager().getActive().get(razorContext.observers.selected.entity)
         .getTransform()
-        .getTranslation()
-        .assign(new Vec3(x, y, z))
+        .setTranslation(new Vec3(x, y, z))
     }
   }
 
@@ -30,8 +29,7 @@ const EntityProperties: React.FC<EntityPropertiesProps> = (props) => {
     if(razorContext.observers.selected.entity) {
       core.getSceneManager().getActive().get(razorContext.observers.selected.entity)
         .getTransform()
-        .getRotation()
-        .assign(new Vec3(x, y, z))
+        .setRotation(new Vec3(x, y, z))
     }
   }
 
@@ -39,8 +37,7 @@ const EntityProperties: React.FC<EntityPropertiesProps> = (props) => {
     if(razorContext.observers.selected.entity) {
       core.getSceneManager().getActive().get(razorContext.observers.selected.entity)
         .getTransform()
-        .getScale()
-        .assign(new Vec3(x, y, z))
+        .setScale(new Vec3(x, y, z))
     }
   }
 
@@ -60,17 +57,18 @@ const EntityProperties: React.FC<EntityPropertiesProps> = (props) => {
         (<>
           <Property 
             title="Translation" 
-            defaultValue={selectedEntity?.getTransform().getTranslation()} 
+            vector={selectedEntity?.getTransform().getTranslation()} 
             setProperty={setTranslation}  
           />
           <Property 
             title="Rotation" 
-            defaultValue={selectedEntity?.getTransform().getRotation()} 
+            vector={selectedEntity?.getTransform().getRotation()} 
             setProperty={setRotation}  
           />
           <Property 
             title="Scale" 
-            defaultValue={selectedEntity?.getTransform().getScale()} 
+            vector={selectedEntity?.getTransform().getScale()} 
+            defaultValue={new Vec3(1, 1, 1)}
             setProperty={setScale}  
           />
         </>)

@@ -1,5 +1,3 @@
-import Camera from '@engine/core/Camera';
-import VBO from "@engine/buffer/VBO";
 import GameCore from "@engine/core/GameCore";
 import Razor from "@engine/core/Razor";
 import ResourceLoader from "@engine/core/ResourceLoader";
@@ -62,44 +60,7 @@ class RazorInterfaceCore extends GameCore {
       shader.create();
     })
 
-        
-
-    // ========= OBJECT DATA ==========
-    // b = bottom, t = top, l = left, r = right, f = far, n = near
-    const vertices = [
-      -0.5, -0.5, -0.5,   // b l n
-      0.5, -0.5, -0.5,    // b r n
-      -0.5, -0.5, 0.5,    // b l f
-      0.5, -0.5, 0.5,     // b r f
-
-      -0.5, 0.5, -0.5,    // t l n
-      0.5, 0.5, -0.5,     // t r n
-      -0.5, 0.5, 0.5,     // t l f
-      0.5, 0.5, 0.5       // t r f
-    ];
-
-    const colors = [
-      1.0, 0.0, 0.0, 1.0, // 0 red
-      0.0, 1.0, 0.0, 1.0, // 1 green
-      0.0, 0.0, 1.0, 1.0, // 2 blue
-      1.0, 0.5, 0.5, 1.0, // 3 pink
-      0.5, 1.0, 0.5, 1.0, // 4 
-      0.0, 1.0, 1.0, 1.0, // 5
-      1.0, 1.0, 0.0, 1.0, // 6
-      0.0, 0.0, 0.0, 1.0, // 7
-    ]
-
-    const indices = [0, 1, 3, 0, 3, 2, 0, 4, 1, 1, 4, 5, 5, 7, 3, 5, 3, 1, 0, 2, 6, 0, 6, 4, 7, 5, 4, 6, 7, 4, 2, 3, 7, 2, 7, 6]
-
     ResourceLoader.loadVAO([
-      {
-        name: 'obj1',
-        objectData: [
-          new VBO(new Float32Array(vertices), 3, true),
-          new VBO(new Float32Array(colors), 4, true),
-          new VBO(new Uint16Array(indices), 1, false),
-        ]
-      },
       {
         name: 'spider',
         objectData: '/resources/objects/spider/spider.obj'

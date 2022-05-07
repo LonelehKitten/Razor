@@ -42,8 +42,7 @@ const CameraProperties: React.FC<CameraPropertiesProps> = (props) => {
 
       core.getCameraManager().get(razorContext.observers.selected.camera)
         .getTransform()
-        .getTranslation()
-        .assign(new Vec3(x, y, z))
+        .setTranslation(new Vec3(x, y, z))
       
     }
   }
@@ -56,8 +55,7 @@ const CameraProperties: React.FC<CameraPropertiesProps> = (props) => {
 
       core.getCameraManager().get(razorContext.observers.selected.camera)
         .getTransform()
-        .getRotation()
-        .assign(new Vec3(x, y, z))
+        .setRotation(new Vec3(x, y, z))
 
     }
   }

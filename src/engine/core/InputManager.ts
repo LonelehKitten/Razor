@@ -148,15 +148,13 @@ class InputManager {
     }
 
     private static onMouseDown(event: MouseEvent): void {
-        if(Razor.FOCUSED){
-            event.stopPropagation()
-            event.preventDefault()
-            InputManager._mouseButtons[event.button] = true
-        }
+        event.stopPropagation()
+        event.preventDefault()
+        InputManager._mouseButtons[event.button] = Razor.IS_MOUSE_INSIDE
     }
 
     private static onMouseUp(event: MouseEvent): void {
-        if(Razor.FOCUSED){
+        if(Razor.IS_MOUSE_INSIDE){
             event.stopPropagation()
             event.preventDefault()
             InputManager._mouseButtons[event.button] = false
@@ -164,7 +162,7 @@ class InputManager {
     }
 
     private static onMouseMove(event: MouseEvent): void {
-        if(Razor.FOCUSED){
+        if(Razor.IS_MOUSE_INSIDE){
             event.stopPropagation()
             event.preventDefault()
             InputManager._mousePosition[0] = event.offsetX

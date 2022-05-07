@@ -10,7 +10,7 @@ void main() {
 
     vec4 finalColor = v_color;
 
-    if(u_selected == 1){ //&& outline() >= 0.7) {
+    if(u_selected == 1){
         finalColor = vec4(normalize(finalColor.xyz + vec3(1, 0.0, 0.0)), 1.0);
     }
 
