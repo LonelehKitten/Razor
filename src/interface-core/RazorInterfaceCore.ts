@@ -54,7 +54,12 @@ class RazorInterfaceCore extends GameCore {
         name: 'editor-shader',
         vertexShaderPathname: '/resources/shader/editor.vert.glsl', 
         fragmentShaderPathname: '/resources/shader/editor.frag.glsl'
-      }
+      },
+      {
+        name: 'camera-shader',
+        vertexShaderPathname: '/resources/shader/camera.vert.glsl', 
+        fragmentShaderPathname: '/resources/shader/camera.frag.glsl'
+      },
     ])
     .forEachShader((shader) => {
       shader.create();
@@ -68,7 +73,11 @@ class RazorInterfaceCore extends GameCore {
       {
         name: 'cube',
         objectData: '/resources/objects/cube/cube.obj'
-      }
+      },
+      {
+        name: 'camera',
+        objectData: '/resources/objects/camera/camera.obj'
+      },
     ])
     .forEachVAO((vao) => {
       vao.create();
@@ -86,7 +95,8 @@ class RazorInterfaceCore extends GameCore {
   public update(time: number, delta: number): void {
     super.update(time, delta);
 
-    this._cameraManager.getActive().update(delta)
+    //this._cameraManager.getActive().update(delta)
+    this._cameraManager.update(time, delta);
   }
 
   public render(): void {
@@ -191,7 +201,7 @@ class RazorInterfaceCore extends GameCore {
     }
 
     this.getCameraManager()
-      .add(new CanvasCamera(name, this._cameraObserver))
+      .add(new CanvasCamera(name, this._cameraManager, this._cameraObserver))
       .get(name)
       .getTransform()
       .setTranslation(new Vec3(0, 0, 0))

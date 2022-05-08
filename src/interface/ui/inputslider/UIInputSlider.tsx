@@ -10,6 +10,7 @@ import { StateSetter } from '@custom-types/react-hooks';
 interface UIInputSliderProps {
   value: number
   onActionPerformed: StateSetter<number>
+  disabled?: boolean
 }
 
 const UIInputSlider: React.FC<UIInputSliderProps> = (props) => {
@@ -24,35 +25,39 @@ const UIInputSlider: React.FC<UIInputSliderProps> = (props) => {
   }, [props.value]);
 
   function enterInput() {
-    setWriteMode(true)
-    inputRef.current.focus()
+    if(!props.disabled) {
+      setWriteMode(true)
+      inputRef.current.focus()
+    }
   }
 
   function exitInput() {
-    props.onActionPerformed(Math.round(inputRef.current.valueAsNumber*100))
-    setWriteMode(false)
+      props.onActionPerformed(Math.round(inputRef.current.valueAsNumber*100))
+      setWriteMode(false)
   }
 
   function changeValue(e: React.MouseEvent) {
-    const div = displayRef.current
-
-    const container = div.parentElement.parentElement.parentElement
-    .parentElement.parentElement.parentElement
-    .parentElement.parentElement.parentElement
-    .parentElement.parentElement
-    
-    const scrollTopInPX = (container.lastChild.firstChild as HTMLDivElement).getAttribute('style').split(',')[1]
-
-    const scrollTop = scrollTopInPX ? Number(scrollTopInPX.substring(0, scrollTopInPX.length-2)) : 0
-    
-    if(clicked.current && e.movementX !== 0 && e.button === 0 && (
-      e.clientX > container.offsetLeft+div.offsetLeft &&
-      e.clientX < container.offsetLeft+div.offsetLeft+div.offsetWidth &&
-      e.clientY > container.offsetTop-scrollTop+div.offsetTop &&
-      e.clientY < container.offsetTop+div.offsetTop-scrollTop+div.offsetHeight
-    )) {
-      const v = e.movementX > 0 ? 10 : -10
-      props.onActionPerformed(oldValue => oldValue+v)
+    if(!props.disabled) {
+      const div = displayRef.current
+  
+      const container = div.parentElement.parentElement.parentElement
+      .parentElement.parentElement.parentElement
+      .parentElement.parentElement.parentElement
+      .parentElement.parentElement
+      
+      const scrollTopInPX = (container.lastChild.firstChild as HTMLDivElement).getAttribute('style').split(',')[1]
+  
+      const scrollTop = scrollTopInPX ? Number(scrollTopInPX.substring(0, scrollTopInPX.length-2)) : 0
+      
+      if(clicked.current && e.movementX !== 0 && e.button === 0 && (
+        e.clientX > container.offsetLeft+div.offsetLeft &&
+        e.clientX < container.offsetLeft+div.offsetLeft+div.offsetWidth &&
+        e.clientY > container.offsetTop-scrollTop+div.offsetTop &&
+        e.clientY < container.offsetTop+div.offsetTop-scrollTop+div.offsetHeight
+      )) {
+        const v = e.movementX > 0 ? 10 : -10
+        props.onActionPerformed(oldValue => oldValue+v)
+      }
     }
   }
 
@@ -65,11 +70,15 @@ const UIInputSlider: React.FC<UIInputSliderProps> = (props) => {
   }
 
   function decrease() {
-    props.onActionPerformed(oldValue => oldValue-100)
+    if(!props.disabled) {
+      props.onActionPerformed(oldValue => oldValue-100)
+    }
   }
 
   function increase() {
-    props.onActionPerformed(oldValue => oldValue+100)
+    if(!props.disabled) {
+      props.onActionPerformed(oldValue => oldValue+100)
+    }
   }
 
   function handleKeyUp(e: React.KeyboardEvent) {
@@ -80,7 +89,7 @@ const UIInputSlider: React.FC<UIInputSliderProps> = (props) => {
 
   return (
     <div 
-      className='input-slider' 
+      className={`input-slider ${props.disabled && 'disabled'}`}
       style={{
         width: '10rem'
       }}

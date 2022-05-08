@@ -65,7 +65,7 @@ const UICombo: React.FC<UIComboProps> = (props) => {
       className="combo"
       onClick={() => setOpen(!open)}
     >
-      <div>{props.value === '' ? 'none' : props.value}</div>
+      <div>{!props.value ? 'none' : props.value}</div>
       <FaChevronDown  />
       <div 
         className="comboPopover"
@@ -78,7 +78,7 @@ const UICombo: React.FC<UIComboProps> = (props) => {
         }}
       >
         <ul>
-          {!props.strict && <li onClick={() => selectItem('')}> none </li>}
+          {!props.strict && <li onClick={() => selectItem(null)}> none </li>}
           {props.items.map((item) => {
             return <li key={item} onClick={() => selectItem(item)}>{item}</li>
           })}

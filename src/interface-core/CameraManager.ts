@@ -23,6 +23,9 @@ class CameraManager {
     }
 
     public update(time: number, delta: number): void {
+        this._canvascameras.forEach((camera) => {
+            camera.update(delta);
+        })
         //this._active.update(time, delta);
     }
 

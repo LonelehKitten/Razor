@@ -35,10 +35,7 @@ class SimpleRenderer extends Renderer {
             ResourceLoader.forEachShader((shader) => {
                 shader.bind();
                 shader.setMatrix4x4('u_projection', this._projection);
-                const view = Mat4.view(
-                    this._cameraManager.getActive().getTransform().getTranslation(),
-                    this._cameraManager.getActive().getTransform().getRotation(),
-                )
+                const view = this._cameraManager.getActive().getView()
                 shader.setMatrix4x4('u_view', view);
                 shader.setMatrix4x4('u_lookAt', view.inverse())
     
@@ -51,9 +48,33 @@ class SimpleRenderer extends Renderer {
                     entity.getVAO().unbind();
                 })
             })
+
+            this._renderCameras()
         }
 
     }
+    private _renderCameras(): void {
+        const shader = ResourceLoader.getShader('camera-shader')
+        const vao = ResourceLoader.getVAO('camera')
+        shader.bind();
+        shader.setMatrix4x4('u_projection', this._projection);
+        const view = this._cameraManager.getActive().getView()
+        shader.setMatrix4x4('u_view', view);
+        this._cameraManager.forEach((camera) => {
+            if(camera.getName() === this._cameraManager.getActive().getName()) {
+                return;
+            }
+            shader.setMatrix4x4('u_transform', Mat4.transform(
+                camera.getTransform().getTranslation().mult(-1),
+                camera.getTransform().getRotation().mult(-1),
+                camera.getTransform().getScale()
+            ));            
+            vao.bind()
+            GLUtils.draw(vao.getLength());
+            vao.unbind();
+        })
+    }
 }
+
 
 export default SimpleRenderer

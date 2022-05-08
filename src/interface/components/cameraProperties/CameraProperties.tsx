@@ -103,6 +103,8 @@ const CameraProperties: React.FC<CameraPropertiesProps> = (props) => {
         ],
       }
     })
+    const entity = core.getCameraManager().get(camera).getLockedIn()
+    lockIn(entity ? entity.getName() : null, true)
   }
 
   function addCamera() {
@@ -111,9 +113,10 @@ const CameraProperties: React.FC<CameraPropertiesProps> = (props) => {
     targetCamera(newCamera)
   }
 
-  function lockIn(entity: string) {
-    core.lockCamera(entity)
-    //const transform = core.getCameraManager().get(razorContext.observers.selected.camera).getTransform()
+  function lockIn(entity: string, alreadyLocked: boolean = false) {
+    if(!alreadyLocked) {
+      core.lockCamera(entity)
+    }
     razorContext.observerDispatch({
       type: RazorObserverActions.lockCamera,
       payload: entity
@@ -164,11 +167,13 @@ const CameraProperties: React.FC<CameraPropertiesProps> = (props) => {
         title="Translation" 
         vector={translation} 
         setProperty={setTranslation}  
+        disabled={razorContext.observers.camera.lockedIn !== null}
       />
       <Property 
         title="Rotation" 
         vector={rotation} 
         setProperty={setRotation}  
+        disabled={razorContext.observers.camera.lockedIn !== null}
       />
     </SimpleBar>
   );

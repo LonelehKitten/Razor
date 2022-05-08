@@ -26,17 +26,18 @@ class Transform {
     }
 
     public setRotation(rotation: Vec3) {
-        this._rotation.assign(rotation)
-        this._fixRotation(this._rotation.x, (v) => {this._rotation.x = v})
-        this._fixRotation(this._rotation.y, (v) => {this._rotation.y = v})
-        this._fixRotation(this._rotation.z, (v) => {this._rotation.z = v})
+        this._fixRotation(rotation.x, (v) => {this._rotation.x = v})
+        this._fixRotation(rotation.y, (v) => {this._rotation.y = v})
+        this._fixRotation(rotation.z, (v) => {this._rotation.z = v})
     }
 
     private _fixRotation(v: number, set: (v: number) => void): void {
         if(v >= 360) {
+            v %= 360
             v -= 360
         }
-        if(v < 0) {
+        if(v <= -360) {
+            v %= 360
             v += 360
         }
         set(v)

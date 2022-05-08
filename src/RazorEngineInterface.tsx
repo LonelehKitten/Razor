@@ -83,7 +83,7 @@ const initialState: RazorObserverState = {
       translation: [0, 0, 0],
       rotation: [0, 0, 0],
     },
-    lockedIn: ''
+    lockedIn: null
   }
 } 
 

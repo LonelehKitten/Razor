@@ -81,7 +81,9 @@ class InputManager {
 
 
     private static _mouseButtons: [boolean, boolean, boolean]
-    private static _mousePosition: [number, number]
+    private static _currentMousePosition: [number, number]
+    private static _previousMousePosition: [number, number]
+    private static _mouseMovement: [number, number]
 
     private static _keys: Map<string, boolean>
 
@@ -95,7 +97,9 @@ class InputManager {
         window.addEventListener('keydown', InputManager.onKeyDown)
         window.addEventListener('keyup', InputManager.onKeyUp)
         InputManager._mouseButtons = [false, false, false]
-        InputManager._mousePosition = [0, 0]
+        InputManager._currentMousePosition = [0, 0]
+        InputManager._previousMousePosition = [0, 0]
+        InputManager._mouseMovement = [0, 0]
         window.addEventListener('mousedown', InputManager.onMouseDown)
         window.addEventListener('mouseup', InputManager.onMouseUp)
         window.addEventListener('mousemove', InputManager.onMouseMove)
@@ -125,6 +129,15 @@ class InputManager {
         }
     }
 
+    public static update() {
+
+        InputManager._mouseMovement[0] = InputManager._currentMousePosition[0] - InputManager._previousMousePosition[0]
+        InputManager._mouseMovement[1] = InputManager._currentMousePosition[1] - InputManager._previousMousePosition[1]
+        InputManager._previousMousePosition[0] = InputManager._currentMousePosition[0]
+        InputManager._previousMousePosition[1] = InputManager._currentMousePosition[1]
+
+    }
+
     // MOUSE EVENTS
 
     public static isMouseLeft(): boolean { 
@@ -140,11 +153,19 @@ class InputManager {
     }
 
     public static getMouseX(): number {
-        return InputManager._mousePosition[0]
+        return InputManager._currentMousePosition[0]
     }
 
     public static getMouseY(): number {
-        return InputManager._mousePosition[1]
+        return InputManager._currentMousePosition[1]
+    }
+
+    public static getMouseDX(): number {
+        return InputManager._mouseMovement[0]
+    }
+
+    public static getMouseDY(): number {
+        return InputManager._mouseMovement[1]
     }
 
     private static onMouseDown(event: MouseEvent): void {
@@ -165,8 +186,9 @@ class InputManager {
         if(Razor.IS_MOUSE_INSIDE){
             event.stopPropagation()
             event.preventDefault()
-            InputManager._mousePosition[0] = event.offsetX
-            InputManager._mousePosition[1] = event.offsetY
+
+            InputManager._currentMousePosition[0] = event.offsetX
+            InputManager._currentMousePosition[1] = event.offsetY
     
             if(InputManager._shouldDebug) {
                 console.log(`offset:  ${event.offsetX}X ${event.offsetY}Y`);

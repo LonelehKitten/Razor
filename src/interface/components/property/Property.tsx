@@ -8,6 +8,7 @@ interface PropertyProps {
   vector?: Vec3
   defaultValue?: Vec3
   setProperty: (x: number, y: number, z: number) => void
+  disabled?: boolean
 }
 
 const Property: React.FC<PropertyProps> = (props) => {
@@ -33,15 +34,27 @@ const Property: React.FC<PropertyProps> = (props) => {
         <ul>
           <li>
             <span>x</span> 
-            <UIInputSlider value={x} onActionPerformed={setX}  />
+            <UIInputSlider 
+              value={x} 
+              onActionPerformed={setX}  
+              disabled={props.disabled}
+            />
           </li>
           <li>
             <span>y</span> 
-            <UIInputSlider value={y} onActionPerformed={setY}  />
+            <UIInputSlider 
+              value={y} 
+              onActionPerformed={setY}  
+              disabled={props.disabled}
+            />
           </li>
           <li>
             <span>z</span>
-            <UIInputSlider value={z} onActionPerformed={setZ}  />
+            <UIInputSlider 
+              value={z} 
+              onActionPerformed={setZ}  
+              disabled={props.disabled}
+            />
           </li>
         </ul>
       </div>
