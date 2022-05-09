@@ -45,9 +45,9 @@ class Vec3 extends Vec2 {
 
     public cross(v: Vec3): Vec3 {
         return new Vec3(
-            this._y * v.z + this._z * v.y,
-            this._z * v.x + this._x * v.z,
-            this._x * v.y + this._y * v.x,
+            this._y * v.z - this._z * v.y,
+            this._z * v.x - this._x * v.z,
+            this._x * v.y - this._y * v.x,
         );
     }
 
@@ -66,9 +66,9 @@ class Vec3 extends Vec2 {
     public lookAt(to: Vec3, tmp: Vec3 = new Vec3(0, 1, 0)): Mat4 {
         const matrix: Mat4 = new Mat4();
 
-        const forward = to.sub(this);
+        const forward = this.sub(to).normalize();
         const right = tmp.normalize().cross(forward);
-        const up = forward.cross(right);
+        const up = forward.cross(right).normalize();
 
         matrix.set([0, 0], right.x); 
         matrix.set([0, 1], right.y); 

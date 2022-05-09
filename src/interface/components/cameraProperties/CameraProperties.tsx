@@ -12,13 +12,14 @@ import {BsPlus} from 'react-icons/bs'
 import {BiTargetLock} from 'react-icons/bi'
 import UIButton from '@ui/buttons/UIButton';
 import UICombo from '@ui/combo/UICombo';
+import UICheckBox from '@ui/checkbox/UICheckBox';
 
 interface CameraPropertiesProps {
   show: boolean
 }
 
 const CameraProperties: React.FC<CameraPropertiesProps> = (props) => {
-  
+  const [lookAt, setLookAt] = useState<boolean>(false);
   const core = useGameCore()
   const razorContext = useContext(RazorContext);
   //const cameraSelectRef = useRef<HTMLSelectElement>();
@@ -105,6 +106,9 @@ const CameraProperties: React.FC<CameraPropertiesProps> = (props) => {
     })
     const entity = core.getCameraManager().get(camera).getLockedIn()
     lockIn(entity ? entity.getName() : null, true)
+    setLookAt(core.getCameraManager().get(camera).shouldLookAt())
+    console.log(camera, core.getCameraManager().get(camera).shouldLookAt());
+    
   }
 
   function addCamera() {
@@ -123,6 +127,10 @@ const CameraProperties: React.FC<CameraPropertiesProps> = (props) => {
     })
     
   }
+
+  useEffect(() => {
+    core?.setLookAt(lookAt)
+  }, [lookAt])
 
   return (
     <SimpleBar 
@@ -160,6 +168,13 @@ const CameraProperties: React.FC<CameraPropertiesProps> = (props) => {
           value={razorContext.observers.camera.lockedIn}
           items={razorContext.observers.scenes[0].entities}
           onActionPerformed={lockIn}
+        />
+        
+        <UICheckBox  
+          id="lookAt"
+          label="Look At"
+          checked={lookAt}
+          onActionPerformed={setLookAt}
         />
 
       </div>

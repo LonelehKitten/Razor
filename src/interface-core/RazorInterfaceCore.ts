@@ -238,6 +238,13 @@ class RazorInterfaceCore extends GameCore {
     }
   }
 
+  public setLookAt(shouldLookAt: boolean) {
+    if(this._selectedCamera) {
+      (this.getCameraManager().get(this._selectedCamera) as CanvasCamera)
+        .setLookAt(shouldLookAt)
+    }
+  }
+
 }
 
 

@@ -444,6 +444,30 @@ class Mat4 extends Mat {
         
         return inv;
     }
+
+    public multVec3(v: Vec3): Vec3 {
+        const r: Vec3 = new Vec3();
+
+        r.x = 
+            this.get([0, 0]) * v.x + 
+            this.get([0, 1]) * v.y + 
+            this.get([0, 2]) * v.z + 
+            this.get([0, 3])
+
+        r.y = 
+            this.get([1, 0]) * v.x + 
+            this.get([1, 1]) * v.y + 
+            this.get([1, 2]) * v.z + 
+            this.get([1, 3])
+
+        r.z = 
+            this.get([2, 0]) * v.x + 
+            this.get([2, 1]) * v.y + 
+            this.get([2, 2]) * v.z + 
+            this.get([2, 3])
+
+        return r;
+    }
 }
 
 export default Mat4;

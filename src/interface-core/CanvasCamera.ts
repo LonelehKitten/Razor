@@ -8,6 +8,7 @@ import InputManager, {Keys} from "../engine/core/InputManager";
 import { toRadian } from "../engine/math/math";
 import Vec3 from "../engine/math/Vec3";
 import CameraManager from "./CameraManager";
+import SimpleEntity from "./entities/SimpleEntity";
 
 
 class CanvasCamera extends Camera {
@@ -133,7 +134,7 @@ class CanvasCamera extends Camera {
     private _thirdPersonMovement(delta: number): void {
 
         if(
-            InputManager.isMouseLeft() && 
+            (InputManager.isMouseLeft() && !this._lookAt) && 
             this._cameraManager.getActive().getName() === this._name
         ) {
             this._angleAround -= InputManager.getMouseDX() * this._sensitivity*2 * delta
@@ -145,24 +146,49 @@ class CanvasCamera extends Camera {
                 this._pitch = -45
             }
         }
-            const horizontalDistance = 10 * Math.cos(toRadian(this._pitch))
-            const verticalDistance = 10 * Math.sin(toRadian(this._pitch))
-            const theta = this._lockedIn.getTransform().getRotation().y + this._angleAround
-            const offsetX = horizontalDistance * Math.sin(toRadian(theta))
-            const offsetZ = horizontalDistance * Math.cos(toRadian(theta))
-            const entityTranslation = this._lockedIn.getTransform().getTranslation()
+
+        if(this._lookAt) {
+            const entity = this._lockedIn as SimpleEntity
+            this._angleAround -= entity.getMovement().getTranslation().x
+            this._pitch -= entity.getMovement().getTranslation().y*4
+            if(this._pitch > 45) {
+                this._pitch = 45
+            }
+            else if(this._pitch < -45) {
+                this._pitch = -45
+            }
+        }
+
+        const horizontalDistance = 10 * Math.cos(toRadian(this._pitch))
+        const verticalDistance = 10 * Math.sin(toRadian(this._pitch))
+        const theta = this._lockedIn.getTransform().getRotation().y + this._angleAround
+        const offsetX = horizontalDistance * Math.sin(toRadian(theta))
+        const offsetZ = horizontalDistance * Math.cos(toRadian(theta))
+        const entityTranslation = this._lockedIn.getTransform().getTranslation()
+
+        if(!this._lookAt) {
             this.getTransform().setTranslation(new Vec3(
                 (entityTranslation.x + offsetX) * -1,
                 (entityTranslation.y - verticalDistance) * -1,
                 (entityTranslation.z + offsetZ) * -1
             ))
+        }
+
         if(
-            InputManager.isMouseLeft() &&
+            InputManager.isMouseLeft() && !this._lookAt &&
             this._cameraManager.getActive().getName() === this._name
         ) { // MOUSE
             this.getTransform().setRotation(new Vec3(
                 -this._pitch,
                 180+theta
+            ))
+        }
+
+        if(this._lookAt) { // MOUSE
+            const theta = this._lockedIn.getTransform().getRotation().y + this._angleAround*4
+            this.getTransform().setRotation(new Vec3(
+                this._pitch,
+                -theta
             ))
         }
 
@@ -193,13 +219,6 @@ class CanvasCamera extends Camera {
     }
 
     public getView(): Mat4 {
-
-        if(this._lookAt) {
-            return this.getTransform().getTranslation()
-                .lookAt(this._lockedIn.getTransform().getTranslation())
-                .inverse()
-        }
-
         return Mat4.view(
             this.getTransform().getTranslation(),
             this.getTransform().getRotation(),
@@ -208,6 +227,14 @@ class CanvasCamera extends Camera {
 
     public getLockedIn(): Entity {
         return this._lockedIn
+    }
+
+    public setLookAt(shouldLookAt: boolean): void {
+        this._lookAt = shouldLookAt
+    }
+
+    public shouldLookAt(): boolean {
+        return this._lookAt
     }
 
     public getName(): string {

@@ -15,5 +15,16 @@
       background-color: #500;
       font-weight: normal;
     }
+
+    & > div.options {
+
+      display: flex;
+      align-items: center;
+
+      & > * {
+        margin: .4rem 0 .4rem .4rem;
+      }
+
+    }
   }
 }

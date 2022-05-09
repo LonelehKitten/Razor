@@ -37,7 +37,7 @@ class SimpleRenderer extends Renderer {
                 shader.setMatrix4x4('u_projection', this._projection);
                 const view = this._cameraManager.getActive().getView()
                 shader.setMatrix4x4('u_view', view);
-                shader.setMatrix4x4('u_lookAt', view.inverse())
+                //shader.setMatrix4x4('u_lookAt', view.inverse())
     
                 this.getEntitiesByShader(shader). forEach((entity: Entity) => {
                     shader.setMatrix4x4('u_transform', entity.getTransform().toMatrix());

@@ -2,7 +2,9 @@ import Property from '@components/property/Property';
 import Entity from '@engine/core/Entity';
 import Vec3 from '@engine/math/Vec3';
 import useGameCore from '@hooks/useGameCore';
+import SimpleEntity from '@interface-core/entities/SimpleEntity';
 import { RazorContext } from '@root/src/RazorEngineInterface';
+import UICheckBox from '@ui/checkbox/UICheckBox';
 import React, { useContext, useEffect, useState } from 'react';
 import SimpleBar from 'simplebar-react';
 
@@ -12,6 +14,7 @@ interface EntityPropertiesProps {
 
 const EntityProperties: React.FC<EntityPropertiesProps> = (props) => {
 
+  const [animate, setAnimate] = useState<boolean>(false);
   const [selectedEntity, setSelectedEntity] = useState<Entity>();
 
   const core = useGameCore()
@@ -43,7 +46,16 @@ const EntityProperties: React.FC<EntityPropertiesProps> = (props) => {
 
   useEffect(() => {
     if(razorContext.observers.selected.entity) {
-      setSelectedEntity(core.getSceneManager().getActive().get(razorContext.observers.selected.entity))
+      const entity = core?.getSceneManager().getActive().get(razorContext.observers.selected.entity);
+      (entity as SimpleEntity).setAnimate(animate)
+    }
+  }, [animate])
+
+  useEffect(() => {
+    if(razorContext.observers.selected.entity) {
+      const entity = core.getSceneManager().getActive().get(razorContext.observers.selected.entity)
+      setSelectedEntity(entity)
+      setAnimate((entity as SimpleEntity).shouldAnimate())
     }
   }, [razorContext.observers.selected.entity])
 
@@ -53,6 +65,14 @@ const EntityProperties: React.FC<EntityPropertiesProps> = (props) => {
       style={{ maxHeight: '100%' }}
     >
       <h3> {`Properties: ${razorContext.observers.selected.entity ?? ''}`} </h3>
+      <div className="options">
+        <UICheckBox  
+          id="animate"
+          label="Animate"
+          checked={animate}
+          onActionPerformed={setAnimate}
+        />
+      </div>
       {razorContext.observers.selected.entity &&
         (<>
           <Property 
